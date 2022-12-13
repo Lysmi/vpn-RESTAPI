@@ -35,16 +35,15 @@ void main(List<String> args) async {
   final ip = InternetAddress.anyIPv4;
   final swaggerPath = 'swagger.yaml';
 
-  final _router = Router();
+  final router = Router();
 
-  UserController userController = UserController(router: _router).addHandlers();
-  ServerController serverController =
-      ServerController(router: _router).addHandlers();
+  UserController(router: router).addHandlers();
+  ServerController(router: router).addHandlers();
 
   final swaggerHandler = SwaggerUI(swaggerPath, title: 'Swagger Test');
 
   // Configure a pipeline that logs requests.
-  final handler = Pipeline().addMiddleware(logRequests()).addHandler(_router);
+  final handler = Pipeline().addMiddleware(logRequests()).addHandler(router);
 
   // For running in containers, we respect the PORT environment variable.
   final port = int.parse(Platform.environment['PORT'] ?? '8080');
