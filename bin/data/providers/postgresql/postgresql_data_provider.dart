@@ -8,8 +8,7 @@ class PostgresqlDataProvider extends IDataProvider {
   final db = GetIt.I<Database>();
   @override
   List<User> getAllUsers() {
-    // TODO: implement getAllUsers
-    throw UnimplementedError();
+    db.users.
   }
 
   @override

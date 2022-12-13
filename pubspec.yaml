@@ -55,7 +55,7 @@ environment_config:
         password:
           default: postgres
         port:
-          default: 54321
+          default: 5432
     production:
       fields: # set of fields for command
         host: # key name
@@ -67,16 +67,16 @@ environment_config:
         password:
           default: 0660838337
         port:
-          default: 54321
+          default: 5432
     max:
       fields: # set of fields for command
         host: # key name
           default: localhost # optional, default value for key, if not provided key will be required during command run
         database:
-          default: main-vpn
+          default: vpn-main
         username:
           default: postgres
         password:
           default: 0660838337
         port:
-          default: 54321
+          default: 5432

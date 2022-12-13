@@ -6,3 +6,6 @@ targets:
           # library that exposes all your table classes
           # modify this if to match your library file
           - bin/data/providers/postgresql/models/user_model.dart
+          - bin/data/providers/postgresql/models/sertificate_model.dart
+          - bin/data/providers/postgresql/models/server_model.dart
+          - bin/data/providers/postgresql/models/region_model.dart

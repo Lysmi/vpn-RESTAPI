@@ -6,7 +6,7 @@
         {
             "label": "env generate",
             "type": "shell",
-            "command": "dart pub run environment_config:generate --config-extension=dev"
+            "command": "dart pub run environment_config:generate --config-extension=max"
         },
         {
             "label": "run build runner",
