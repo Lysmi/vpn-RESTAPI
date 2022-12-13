@@ -9,3 +9,14 @@ targets:
           - bin/data/providers/postgresql/models/sertificate_model.dart
           - bin/data/providers/postgresql/models/server_model.dart
           - bin/data/providers/postgresql/models/region_model.dart
+
+      dart_json_mapper:
+        generate_for:
+          # here should be listed entry point files having 'void main()' function
+          - bin/gateway.dart
+
+      # This part is needed to tell original reflectable builder to stay away
+      # it overrides default options for reflectable builder to an **empty** set of files
+      reflectable:
+        generate_for:
+          - no/files

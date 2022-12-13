@@ -3,11 +3,10 @@ import 'package:stormberry/stormberry.dart';
 import '../../../../domain/entities/payment_act.dart';
 import 'user_model.dart';
 
-@Model()
+@Model(tableName: 'payment_acts')
 abstract class PaymentActModel {
   @PrimaryKey()
-  @AutoIncrement()
-  int get id;
+  String get id;
 
   UserModel get user;
   int get sum;

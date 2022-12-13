@@ -3,28 +3,22 @@ import 'package:stormberry/stormberry.dart';
 import '../../../../domain/entities/user.dart';
 import 'sertificate_model.dart';
 
-@Model()
+@Model(tableName: 'users')
 abstract class UserModel {
   @PrimaryKey()
-  @AutoIncrement()
-  int get id;
-
+  String get id;
   String get telegramId;
-  String get username;
-  String get firstName;
-  String get lastName;
+  String? get username;
   int get balance;
   bool get freePeriodUsed;
-  SertificateModel get currentCertificate;
+  SertificateModel? get currentCertificate;
 }
 
 User userToEntity(UserModel model) => User(
       id: model.id,
       telegramId: model.telegramId,
-      username: model.username,
-      firstName: model.firstName,
-      lastName: model.lastName,
+      username: model.username ?? '',
       balance: model.balance,
       freePeriodUsed: model.freePeriodUsed,
-      currentCertificate: sertificateToEntity(model.currentCertificate),
+      currentCertificate: sertificateToEntity(model.currentCertificate ?? null),
     );

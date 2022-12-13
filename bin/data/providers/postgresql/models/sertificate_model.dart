@@ -4,11 +4,10 @@ import '../../../../domain/entities/sertificate.dart';
 import 'server_model.dart';
 import 'user_model.dart';
 
-@Model()
+@Model(tableName: 'sertificates')
 abstract class SertificateModel {
   @PrimaryKey()
-  @AutoIncrement()
-  int get id;
+  String get id;
 
   String get privateKey;
   String get publicKey;
@@ -17,10 +16,12 @@ abstract class SertificateModel {
   UserModel get user;
 }
 
-Sertificate sertificateToEntity(SertificateModel model) => Sertificate(
-      id: model.id,
-      dateCreate: model.dateCreate,
-      privateKey: model.privateKey,
-      publicKey: model.publicKey,
-      server: serverToEntity(model.server),
-    );
+Sertificate? sertificateToEntity(SertificateModel? model) => model == null
+    ? null
+    : Sertificate(
+        id: model.id,
+        dateCreate: model.dateCreate,
+        privateKey: model.privateKey,
+        publicKey: model.publicKey,
+        server: serverToEntity(model.server),
+      );

@@ -16,7 +16,7 @@ class PostgresqlDataProvider extends IDataProvider {
   }
 
   @override
-  Future<User?> getUserById(int id) async {
+  Future<User?> getUserById(String id) async {
     final userModel = await db.userModels.queryUserModel(id);
     if (userModel != null) {
       return userToEntity(userModel);

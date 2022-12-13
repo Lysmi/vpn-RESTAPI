@@ -1,7 +1,11 @@
+import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'package:uuid/uuid.dart';
+
 import 'server.dart';
 
+@jsonSerializable
 class Sertificate {
-  int? id;
+  String id;
   String privateKey;
   String publicKey;
   Server server;
@@ -9,10 +13,11 @@ class Sertificate {
 
   Sertificate(
       {required this.dateCreate,
-      this.id,
+      id,
       required this.privateKey,
       required this.publicKey,
-      required this.server});
+      required this.server})
+      : id = id ?? Uuid().v4();
 
   Sertificate copyWith({dateCreate, id, privateKey, publicKey, server}) {
     return Sertificate(

@@ -8,7 +8,8 @@
             "name": "vpn_rest_server",
             "request": "launch",
             "type": "dart",
-            //"preLaunchTask": "build",
+            "preLaunchTask": "build",
+            "program": "bin/gateway.dart"
         }
     ]
 }

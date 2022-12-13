@@ -14,25 +14,25 @@ final registry = ModelRegistry({});
 abstract class ServerModelRepository
     implements
         ModelRepository,
-        KeyedModelRepositoryInsert<ServerModelInsertRequest>,
+        ModelRepositoryInsert<ServerModelInsertRequest>,
         ModelRepositoryUpdate<ServerModelUpdateRequest>,
-        ModelRepositoryDelete<int> {
+        ModelRepositoryDelete<String> {
   factory ServerModelRepository._(Database db) = _ServerModelRepository;
 
-  Future<ServerModel?> queryServerModel(int id);
+  Future<ServerModel?> queryServerModel(String id);
   Future<List<ServerModel>> queryServerModels([QueryParams? params]);
 }
 
 class _ServerModelRepository extends BaseRepository
     with
-        KeyedRepositoryInsertMixin<ServerModelInsertRequest>,
+        RepositoryInsertMixin<ServerModelInsertRequest>,
         RepositoryUpdateMixin<ServerModelUpdateRequest>,
-        RepositoryDeleteMixin<int>
+        RepositoryDeleteMixin<String>
     implements ServerModelRepository {
   _ServerModelRepository(Database db) : super(db: db);
 
   @override
-  Future<ServerModel?> queryServerModel(int id) {
+  Future<ServerModel?> queryServerModel(String id) {
     return queryOne(id, ServerModelQueryable());
   }
 
@@ -42,38 +42,34 @@ class _ServerModelRepository extends BaseRepository
   }
 
   @override
-  Future<List<int>> insert(Database db, List<ServerModelInsertRequest> requests) async {
-    if (requests.isEmpty) return [];
-    var rows =
-        await db.query(requests.map((r) => "SELECT nextval('server_models_id_seq') as \"id\"").join('\nUNION ALL\n'));
-    var autoIncrements = rows.map((r) => r.toColumnMap()).toList();
+  Future<void> insert(Database db, List<ServerModelInsertRequest> requests) async {
+    if (requests.isEmpty) return;
 
     await db.query(
-      'INSERT INTO "server_models" ( "id", "ip", "server_name", "count_users", "region_id" )\n'
-      'VALUES ${requests.map((r) => '( ${registry.encode(autoIncrements[requests.indexOf(r)]['id'])}, ${registry.encode(r.ip)}, ${registry.encode(r.serverName)}, ${registry.encode(r.countUsers)}, ${registry.encode(r.regionId)} )').join(', ')}\n',
+      'INSERT INTO "servers" ( "id", "ip", "server_name", "count_users", "region_id" )\n'
+      'VALUES ${requests.map((r) => '( ${registry.encode(r.id)}, ${registry.encode(r.ip)}, ${registry.encode(r.serverName)}, ${registry.encode(r.countUsers)}, ${registry.encode(r.regionId)} )').join(', ')}\n'
+      'ON CONFLICT ( "id" ) DO UPDATE SET "ip" = EXCLUDED."ip", "server_name" = EXCLUDED."server_name", "count_users" = EXCLUDED."count_users", "region_id" = EXCLUDED."region_id"',
     );
-
-    return autoIncrements.map<int>((m) => registry.decode(m['id'])).toList();
   }
 
   @override
   Future<void> update(Database db, List<ServerModelUpdateRequest> requests) async {
     if (requests.isEmpty) return;
     await db.query(
-      'UPDATE "server_models"\n'
-      'SET "ip" = COALESCE(UPDATED."ip"::text, "server_models"."ip"), "server_name" = COALESCE(UPDATED."server_name"::text, "server_models"."server_name"), "count_users" = COALESCE(UPDATED."count_users"::int8, "server_models"."count_users"), "region_id" = COALESCE(UPDATED."region_id"::int8, "server_models"."region_id")\n'
+      'UPDATE "servers"\n'
+      'SET "ip" = COALESCE(UPDATED."ip"::text, "servers"."ip"), "server_name" = COALESCE(UPDATED."server_name"::text, "servers"."server_name"), "count_users" = COALESCE(UPDATED."count_users"::int8, "servers"."count_users"), "region_id" = COALESCE(UPDATED."region_id"::text, "servers"."region_id")\n'
       'FROM ( VALUES ${requests.map((r) => '( ${registry.encode(r.id)}, ${registry.encode(r.ip)}, ${registry.encode(r.serverName)}, ${registry.encode(r.countUsers)}, ${registry.encode(r.regionId)} )').join(', ')} )\n'
       'AS UPDATED("id", "ip", "server_name", "count_users", "region_id")\n'
-      'WHERE "server_models"."id" = UPDATED."id"',
+      'WHERE "servers"."id" = UPDATED."id"',
     );
   }
 
   @override
-  Future<void> delete(Database db, List<int> keys) async {
+  Future<void> delete(Database db, List<String> keys) async {
     if (keys.isEmpty) return;
     await db.query(
-      'DELETE FROM "server_models"\n'
-      'WHERE "server_models"."id" IN ( ${keys.map((k) => registry.encode(k)).join(',')} )',
+      'DELETE FROM "servers"\n'
+      'WHERE "servers"."id" IN ( ${keys.map((k) => registry.encode(k)).join(',')} )',
     );
   }
 }
@@ -81,25 +77,25 @@ class _ServerModelRepository extends BaseRepository
 abstract class RegionModelRepository
     implements
         ModelRepository,
-        KeyedModelRepositoryInsert<RegionModelInsertRequest>,
+        ModelRepositoryInsert<RegionModelInsertRequest>,
         ModelRepositoryUpdate<RegionModelUpdateRequest>,
-        ModelRepositoryDelete<int> {
+        ModelRepositoryDelete<String> {
   factory RegionModelRepository._(Database db) = _RegionModelRepository;
 
-  Future<RegionModel?> queryRegionModel(int id);
+  Future<RegionModel?> queryRegionModel(String id);
   Future<List<RegionModel>> queryRegionModels([QueryParams? params]);
 }
 
 class _RegionModelRepository extends BaseRepository
     with
-        KeyedRepositoryInsertMixin<RegionModelInsertRequest>,
+        RepositoryInsertMixin<RegionModelInsertRequest>,
         RepositoryUpdateMixin<RegionModelUpdateRequest>,
-        RepositoryDeleteMixin<int>
+        RepositoryDeleteMixin<String>
     implements RegionModelRepository {
   _RegionModelRepository(Database db) : super(db: db);
 
   @override
-  Future<RegionModel?> queryRegionModel(int id) {
+  Future<RegionModel?> queryRegionModel(String id) {
     return queryOne(id, RegionModelQueryable());
   }
 
@@ -109,83 +105,81 @@ class _RegionModelRepository extends BaseRepository
   }
 
   @override
-  Future<List<int>> insert(Database db, List<RegionModelInsertRequest> requests) async {
-    if (requests.isEmpty) return [];
-    var rows =
-        await db.query(requests.map((r) => "SELECT nextval('region_models_id_seq') as \"id\"").join('\nUNION ALL\n'));
-    var autoIncrements = rows.map((r) => r.toColumnMap()).toList();
+  Future<void> insert(Database db, List<RegionModelInsertRequest> requests) async {
+    if (requests.isEmpty) return;
 
     await db.query(
-      'INSERT INTO "region_models" ( "id", "region_name" )\n'
-      'VALUES ${requests.map((r) => '( ${registry.encode(autoIncrements[requests.indexOf(r)]['id'])}, ${registry.encode(r.regionName)} )').join(', ')}\n',
+      'INSERT INTO "regions" ( "id", "region_name" )\n'
+      'VALUES ${requests.map((r) => '( ${registry.encode(r.id)}, ${registry.encode(r.regionName)} )').join(', ')}\n'
+      'ON CONFLICT ( "id" ) DO UPDATE SET "region_name" = EXCLUDED."region_name"',
     );
-
-    return autoIncrements.map<int>((m) => registry.decode(m['id'])).toList();
   }
 
   @override
   Future<void> update(Database db, List<RegionModelUpdateRequest> requests) async {
     if (requests.isEmpty) return;
     await db.query(
-      'UPDATE "region_models"\n'
-      'SET "region_name" = COALESCE(UPDATED."region_name"::text, "region_models"."region_name")\n'
+      'UPDATE "regions"\n'
+      'SET "region_name" = COALESCE(UPDATED."region_name"::text, "regions"."region_name")\n'
       'FROM ( VALUES ${requests.map((r) => '( ${registry.encode(r.id)}, ${registry.encode(r.regionName)} )').join(', ')} )\n'
       'AS UPDATED("id", "region_name")\n'
-      'WHERE "region_models"."id" = UPDATED."id"',
+      'WHERE "regions"."id" = UPDATED."id"',
     );
   }
 
   @override
-  Future<void> delete(Database db, List<int> keys) async {
+  Future<void> delete(Database db, List<String> keys) async {
     if (keys.isEmpty) return;
     await db.query(
-      'DELETE FROM "region_models"\n'
-      'WHERE "region_models"."id" IN ( ${keys.map((k) => registry.encode(k)).join(',')} )',
+      'DELETE FROM "regions"\n'
+      'WHERE "regions"."id" IN ( ${keys.map((k) => registry.encode(k)).join(',')} )',
     );
   }
 }
 
 class ServerModelInsertRequest {
   ServerModelInsertRequest(
-      {required this.ip, required this.serverName, required this.countUsers, required this.regionId});
+      {required this.id, required this.ip, required this.serverName, required this.countUsers, required this.regionId});
+  String id;
   String ip;
   String serverName;
   int countUsers;
-  int regionId;
+  String regionId;
 }
 
 class RegionModelInsertRequest {
-  RegionModelInsertRequest({required this.regionName});
+  RegionModelInsertRequest({required this.id, required this.regionName});
+  String id;
   String regionName;
 }
 
 class ServerModelUpdateRequest {
   ServerModelUpdateRequest({required this.id, this.ip, this.serverName, this.countUsers, this.regionId});
-  int id;
+  String id;
   String? ip;
   String? serverName;
   int? countUsers;
-  int? regionId;
+  String? regionId;
 }
 
 class RegionModelUpdateRequest {
   RegionModelUpdateRequest({required this.id, this.regionName});
-  int id;
+  String id;
   String? regionName;
 }
 
-class ServerModelQueryable extends KeyedViewQueryable<ServerModel, int> {
+class ServerModelQueryable extends KeyedViewQueryable<ServerModel, String> {
   @override
   String get keyName => 'id';
 
   @override
-  String encodeKey(int key) => registry.encode(key);
+  String encodeKey(String key) => registry.encode(key);
 
   @override
-  String get tableName => 'server_models_view';
+  String get tableName => 'servers_view';
 
   @override
-  String get tableAlias => 'server_models';
+  String get tableAlias => 'servers';
 
   @override
   ServerModel decode(TypedMap map) => ServerModelView(
@@ -201,7 +195,7 @@ class ServerModelView implements ServerModel {
       {required this.id, required this.ip, required this.serverName, required this.countUsers, required this.region});
 
   @override
-  final int id;
+  final String id;
   @override
   final String ip;
   @override
@@ -212,18 +206,18 @@ class ServerModelView implements ServerModel {
   final RegionModel region;
 }
 
-class RegionModelQueryable extends KeyedViewQueryable<RegionModel, int> {
+class RegionModelQueryable extends KeyedViewQueryable<RegionModel, String> {
   @override
   String get keyName => 'id';
 
   @override
-  String encodeKey(int key) => registry.encode(key);
+  String encodeKey(String key) => registry.encode(key);
 
   @override
-  String get tableName => 'region_models_view';
+  String get tableName => 'regions_view';
 
   @override
-  String get tableAlias => 'region_models';
+  String get tableAlias => 'regions';
 
   @override
   RegionModel decode(TypedMap map) =>
@@ -234,7 +228,7 @@ class RegionModelView implements RegionModel {
   RegionModelView({required this.id, required this.regionName});
 
   @override
-  final int id;
+  final String id;
   @override
   final String regionName;
 }

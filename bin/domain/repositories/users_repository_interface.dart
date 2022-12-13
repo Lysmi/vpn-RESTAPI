@@ -2,5 +2,5 @@ import '../entities/user.dart';
 
 abstract class IUsersRepository {
   Future<List<User>> getAllUsers();
-  Future<User?> getUserById(int id);
+  Future<User?> getUserById(String id);
 }

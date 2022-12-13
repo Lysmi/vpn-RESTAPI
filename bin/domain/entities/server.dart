@@ -1,7 +1,11 @@
+import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'package:uuid/uuid.dart';
+
 import 'region.dart';
 
+@jsonSerializable
 class Server {
-  int? id;
+  String id;
   String ip;
   String serverName;
   int countUsers;
@@ -9,11 +13,11 @@ class Server {
 
   Server({
     required this.countUsers,
-    this.id,
+    id,
     required this.ip,
     required this.serverName,
     required this.region,
-  });
+  }) : id = id ?? Uuid().v4();
 
   Server copyWith({
     countUsers,

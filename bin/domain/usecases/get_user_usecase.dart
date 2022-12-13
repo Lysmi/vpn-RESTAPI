@@ -9,7 +9,7 @@ class GetUserUsecase {
     return userRep.getAllUsers();
   }
 
-  Future<User?> getUserById(int id) {
+  Future<User?> getUserById(String id) {
     return userRep.getUserById(id);
   }
 }

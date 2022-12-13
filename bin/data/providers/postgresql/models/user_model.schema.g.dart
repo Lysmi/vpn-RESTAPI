@@ -18,25 +18,25 @@ final registry = ModelRegistry({});
 abstract class UserModelRepository
     implements
         ModelRepository,
-        KeyedModelRepositoryInsert<UserModelInsertRequest>,
+        ModelRepositoryInsert<UserModelInsertRequest>,
         ModelRepositoryUpdate<UserModelUpdateRequest>,
-        ModelRepositoryDelete<int> {
+        ModelRepositoryDelete<String> {
   factory UserModelRepository._(Database db) = _UserModelRepository;
 
-  Future<UserModel?> queryUserModel(int id);
+  Future<UserModel?> queryUserModel(String id);
   Future<List<UserModel>> queryUserModels([QueryParams? params]);
 }
 
 class _UserModelRepository extends BaseRepository
     with
-        KeyedRepositoryInsertMixin<UserModelInsertRequest>,
+        RepositoryInsertMixin<UserModelInsertRequest>,
         RepositoryUpdateMixin<UserModelUpdateRequest>,
-        RepositoryDeleteMixin<int>
+        RepositoryDeleteMixin<String>
     implements UserModelRepository {
   _UserModelRepository(Database db) : super(db: db);
 
   @override
-  Future<UserModel?> queryUserModel(int id) {
+  Future<UserModel?> queryUserModel(String id) {
     return queryOne(id, UserModelQueryable());
   }
 
@@ -46,38 +46,34 @@ class _UserModelRepository extends BaseRepository
   }
 
   @override
-  Future<List<int>> insert(Database db, List<UserModelInsertRequest> requests) async {
-    if (requests.isEmpty) return [];
-    var rows =
-        await db.query(requests.map((r) => "SELECT nextval('user_models_id_seq') as \"id\"").join('\nUNION ALL\n'));
-    var autoIncrements = rows.map((r) => r.toColumnMap()).toList();
+  Future<void> insert(Database db, List<UserModelInsertRequest> requests) async {
+    if (requests.isEmpty) return;
 
     await db.query(
-      'INSERT INTO "user_models" ( "id", "telegram_id", "username", "first_name", "last_name", "balance", "free_period_used", "current_certificate_id" )\n'
-      'VALUES ${requests.map((r) => '( ${registry.encode(autoIncrements[requests.indexOf(r)]['id'])}, ${registry.encode(r.telegramId)}, ${registry.encode(r.username)}, ${registry.encode(r.firstName)}, ${registry.encode(r.lastName)}, ${registry.encode(r.balance)}, ${registry.encode(r.freePeriodUsed)}, ${registry.encode(r.currentCertificateId)} )').join(', ')}\n',
+      'INSERT INTO "users" ( "id", "telegram_id", "username", "balance", "free_period_used", "current_certificate_id" )\n'
+      'VALUES ${requests.map((r) => '( ${registry.encode(r.id)}, ${registry.encode(r.telegramId)}, ${registry.encode(r.username)}, ${registry.encode(r.balance)}, ${registry.encode(r.freePeriodUsed)}, ${registry.encode(r.currentCertificateId)} )').join(', ')}\n'
+      'ON CONFLICT ( "id" ) DO UPDATE SET "telegram_id" = EXCLUDED."telegram_id", "username" = EXCLUDED."username", "balance" = EXCLUDED."balance", "free_period_used" = EXCLUDED."free_period_used", "current_certificate_id" = EXCLUDED."current_certificate_id"',
     );
-
-    return autoIncrements.map<int>((m) => registry.decode(m['id'])).toList();
   }
 
   @override
   Future<void> update(Database db, List<UserModelUpdateRequest> requests) async {
     if (requests.isEmpty) return;
     await db.query(
-      'UPDATE "user_models"\n'
-      'SET "telegram_id" = COALESCE(UPDATED."telegram_id"::text, "user_models"."telegram_id"), "username" = COALESCE(UPDATED."username"::text, "user_models"."username"), "first_name" = COALESCE(UPDATED."first_name"::text, "user_models"."first_name"), "last_name" = COALESCE(UPDATED."last_name"::text, "user_models"."last_name"), "balance" = COALESCE(UPDATED."balance"::int8, "user_models"."balance"), "free_period_used" = COALESCE(UPDATED."free_period_used"::bool, "user_models"."free_period_used"), "current_certificate_id" = COALESCE(UPDATED."current_certificate_id"::int8, "user_models"."current_certificate_id")\n'
-      'FROM ( VALUES ${requests.map((r) => '( ${registry.encode(r.id)}, ${registry.encode(r.telegramId)}, ${registry.encode(r.username)}, ${registry.encode(r.firstName)}, ${registry.encode(r.lastName)}, ${registry.encode(r.balance)}, ${registry.encode(r.freePeriodUsed)}, ${registry.encode(r.currentCertificateId)} )').join(', ')} )\n'
-      'AS UPDATED("id", "telegram_id", "username", "first_name", "last_name", "balance", "free_period_used", "current_certificate_id")\n'
-      'WHERE "user_models"."id" = UPDATED."id"',
+      'UPDATE "users"\n'
+      'SET "telegram_id" = COALESCE(UPDATED."telegram_id"::text, "users"."telegram_id"), "username" = COALESCE(UPDATED."username"::text, "users"."username"), "balance" = COALESCE(UPDATED."balance"::int8, "users"."balance"), "free_period_used" = COALESCE(UPDATED."free_period_used"::bool, "users"."free_period_used"), "current_certificate_id" = COALESCE(UPDATED."current_certificate_id"::text, "users"."current_certificate_id")\n'
+      'FROM ( VALUES ${requests.map((r) => '( ${registry.encode(r.id)}, ${registry.encode(r.telegramId)}, ${registry.encode(r.username)}, ${registry.encode(r.balance)}, ${registry.encode(r.freePeriodUsed)}, ${registry.encode(r.currentCertificateId)} )').join(', ')} )\n'
+      'AS UPDATED("id", "telegram_id", "username", "balance", "free_period_used", "current_certificate_id")\n'
+      'WHERE "users"."id" = UPDATED."id"',
     );
   }
 
   @override
-  Future<void> delete(Database db, List<int> keys) async {
+  Future<void> delete(Database db, List<String> keys) async {
     if (keys.isEmpty) return;
     await db.query(
-      'DELETE FROM "user_models"\n'
-      'WHERE "user_models"."id" IN ( ${keys.map((k) => registry.encode(k)).join(',')} )',
+      'DELETE FROM "users"\n'
+      'WHERE "users"."id" IN ( ${keys.map((k) => registry.encode(k)).join(',')} )',
     );
   }
 }
@@ -85,25 +81,25 @@ class _UserModelRepository extends BaseRepository
 abstract class SertificateModelRepository
     implements
         ModelRepository,
-        KeyedModelRepositoryInsert<SertificateModelInsertRequest>,
+        ModelRepositoryInsert<SertificateModelInsertRequest>,
         ModelRepositoryUpdate<SertificateModelUpdateRequest>,
-        ModelRepositoryDelete<int> {
+        ModelRepositoryDelete<String> {
   factory SertificateModelRepository._(Database db) = _SertificateModelRepository;
 
-  Future<SertificateModel?> querySertificateModel(int id);
+  Future<SertificateModel?> querySertificateModel(String id);
   Future<List<SertificateModel>> querySertificateModels([QueryParams? params]);
 }
 
 class _SertificateModelRepository extends BaseRepository
     with
-        KeyedRepositoryInsertMixin<SertificateModelInsertRequest>,
+        RepositoryInsertMixin<SertificateModelInsertRequest>,
         RepositoryUpdateMixin<SertificateModelUpdateRequest>,
-        RepositoryDeleteMixin<int>
+        RepositoryDeleteMixin<String>
     implements SertificateModelRepository {
   _SertificateModelRepository(Database db) : super(db: db);
 
   @override
-  Future<SertificateModel?> querySertificateModel(int id) {
+  Future<SertificateModel?> querySertificateModel(String id) {
     return queryOne(id, SertificateModelQueryable());
   }
 
@@ -113,38 +109,34 @@ class _SertificateModelRepository extends BaseRepository
   }
 
   @override
-  Future<List<int>> insert(Database db, List<SertificateModelInsertRequest> requests) async {
-    if (requests.isEmpty) return [];
-    var rows = await db
-        .query(requests.map((r) => "SELECT nextval('sertificate_models_id_seq') as \"id\"").join('\nUNION ALL\n'));
-    var autoIncrements = rows.map((r) => r.toColumnMap()).toList();
+  Future<void> insert(Database db, List<SertificateModelInsertRequest> requests) async {
+    if (requests.isEmpty) return;
 
     await db.query(
-      'INSERT INTO "sertificate_models" ( "user_id", "id", "private_key", "public_key", "server_id", "date_create" )\n'
-      'VALUES ${requests.map((r) => '( ${registry.encode(r.userId)}, ${registry.encode(autoIncrements[requests.indexOf(r)]['id'])}, ${registry.encode(r.privateKey)}, ${registry.encode(r.publicKey)}, ${registry.encode(r.serverId)}, ${registry.encode(r.dateCreate)} )').join(', ')}\n',
+      'INSERT INTO "sertificates" ( "user_id", "id", "private_key", "public_key", "server_id", "date_create" )\n'
+      'VALUES ${requests.map((r) => '( ${registry.encode(r.userId)}, ${registry.encode(r.id)}, ${registry.encode(r.privateKey)}, ${registry.encode(r.publicKey)}, ${registry.encode(r.serverId)}, ${registry.encode(r.dateCreate)} )').join(', ')}\n'
+      'ON CONFLICT ( "id" ) DO UPDATE SET "user_id" = EXCLUDED."user_id", "private_key" = EXCLUDED."private_key", "public_key" = EXCLUDED."public_key", "server_id" = EXCLUDED."server_id", "date_create" = EXCLUDED."date_create"',
     );
-
-    return autoIncrements.map<int>((m) => registry.decode(m['id'])).toList();
   }
 
   @override
   Future<void> update(Database db, List<SertificateModelUpdateRequest> requests) async {
     if (requests.isEmpty) return;
     await db.query(
-      'UPDATE "sertificate_models"\n'
-      'SET "user_id" = COALESCE(UPDATED."user_id"::int8, "sertificate_models"."user_id"), "private_key" = COALESCE(UPDATED."private_key"::text, "sertificate_models"."private_key"), "public_key" = COALESCE(UPDATED."public_key"::text, "sertificate_models"."public_key"), "server_id" = COALESCE(UPDATED."server_id"::int8, "sertificate_models"."server_id"), "date_create" = COALESCE(UPDATED."date_create"::timestamp, "sertificate_models"."date_create")\n'
+      'UPDATE "sertificates"\n'
+      'SET "user_id" = COALESCE(UPDATED."user_id"::text, "sertificates"."user_id"), "private_key" = COALESCE(UPDATED."private_key"::text, "sertificates"."private_key"), "public_key" = COALESCE(UPDATED."public_key"::text, "sertificates"."public_key"), "server_id" = COALESCE(UPDATED."server_id"::text, "sertificates"."server_id"), "date_create" = COALESCE(UPDATED."date_create"::timestamp, "sertificates"."date_create")\n'
       'FROM ( VALUES ${requests.map((r) => '( ${registry.encode(r.userId)}, ${registry.encode(r.id)}, ${registry.encode(r.privateKey)}, ${registry.encode(r.publicKey)}, ${registry.encode(r.serverId)}, ${registry.encode(r.dateCreate)} )').join(', ')} )\n'
       'AS UPDATED("user_id", "id", "private_key", "public_key", "server_id", "date_create")\n'
-      'WHERE "sertificate_models"."id" = UPDATED."id"',
+      'WHERE "sertificates"."id" = UPDATED."id"',
     );
   }
 
   @override
-  Future<void> delete(Database db, List<int> keys) async {
+  Future<void> delete(Database db, List<String> keys) async {
     if (keys.isEmpty) return;
     await db.query(
-      'DELETE FROM "sertificate_models"\n'
-      'WHERE "sertificate_models"."id" IN ( ${keys.map((k) => registry.encode(k)).join(',')} )',
+      'DELETE FROM "sertificates"\n'
+      'WHERE "sertificates"."id" IN ( ${keys.map((k) => registry.encode(k)).join(',')} )',
     );
   }
 }
@@ -152,25 +144,25 @@ class _SertificateModelRepository extends BaseRepository
 abstract class ServerModelRepository
     implements
         ModelRepository,
-        KeyedModelRepositoryInsert<ServerModelInsertRequest>,
+        ModelRepositoryInsert<ServerModelInsertRequest>,
         ModelRepositoryUpdate<ServerModelUpdateRequest>,
-        ModelRepositoryDelete<int> {
+        ModelRepositoryDelete<String> {
   factory ServerModelRepository._(Database db) = _ServerModelRepository;
 
-  Future<ServerModel?> queryServerModel(int id);
+  Future<ServerModel?> queryServerModel(String id);
   Future<List<ServerModel>> queryServerModels([QueryParams? params]);
 }
 
 class _ServerModelRepository extends BaseRepository
     with
-        KeyedRepositoryInsertMixin<ServerModelInsertRequest>,
+        RepositoryInsertMixin<ServerModelInsertRequest>,
         RepositoryUpdateMixin<ServerModelUpdateRequest>,
-        RepositoryDeleteMixin<int>
+        RepositoryDeleteMixin<String>
     implements ServerModelRepository {
   _ServerModelRepository(Database db) : super(db: db);
 
   @override
-  Future<ServerModel?> queryServerModel(int id) {
+  Future<ServerModel?> queryServerModel(String id) {
     return queryOne(id, ServerModelQueryable());
   }
 
@@ -180,38 +172,34 @@ class _ServerModelRepository extends BaseRepository
   }
 
   @override
-  Future<List<int>> insert(Database db, List<ServerModelInsertRequest> requests) async {
-    if (requests.isEmpty) return [];
-    var rows =
-        await db.query(requests.map((r) => "SELECT nextval('server_models_id_seq') as \"id\"").join('\nUNION ALL\n'));
-    var autoIncrements = rows.map((r) => r.toColumnMap()).toList();
+  Future<void> insert(Database db, List<ServerModelInsertRequest> requests) async {
+    if (requests.isEmpty) return;
 
     await db.query(
-      'INSERT INTO "server_models" ( "id", "ip", "server_name", "count_users", "region_id" )\n'
-      'VALUES ${requests.map((r) => '( ${registry.encode(autoIncrements[requests.indexOf(r)]['id'])}, ${registry.encode(r.ip)}, ${registry.encode(r.serverName)}, ${registry.encode(r.countUsers)}, ${registry.encode(r.regionId)} )').join(', ')}\n',
+      'INSERT INTO "servers" ( "id", "ip", "server_name", "count_users", "region_id" )\n'
+      'VALUES ${requests.map((r) => '( ${registry.encode(r.id)}, ${registry.encode(r.ip)}, ${registry.encode(r.serverName)}, ${registry.encode(r.countUsers)}, ${registry.encode(r.regionId)} )').join(', ')}\n'
+      'ON CONFLICT ( "id" ) DO UPDATE SET "ip" = EXCLUDED."ip", "server_name" = EXCLUDED."server_name", "count_users" = EXCLUDED."count_users", "region_id" = EXCLUDED."region_id"',
     );
-
-    return autoIncrements.map<int>((m) => registry.decode(m['id'])).toList();
   }
 
   @override
   Future<void> update(Database db, List<ServerModelUpdateRequest> requests) async {
     if (requests.isEmpty) return;
     await db.query(
-      'UPDATE "server_models"\n'
-      'SET "ip" = COALESCE(UPDATED."ip"::text, "server_models"."ip"), "server_name" = COALESCE(UPDATED."server_name"::text, "server_models"."server_name"), "count_users" = COALESCE(UPDATED."count_users"::int8, "server_models"."count_users"), "region_id" = COALESCE(UPDATED."region_id"::int8, "server_models"."region_id")\n'
+      'UPDATE "servers"\n'
+      'SET "ip" = COALESCE(UPDATED."ip"::text, "servers"."ip"), "server_name" = COALESCE(UPDATED."server_name"::text, "servers"."server_name"), "count_users" = COALESCE(UPDATED."count_users"::int8, "servers"."count_users"), "region_id" = COALESCE(UPDATED."region_id"::text, "servers"."region_id")\n'
       'FROM ( VALUES ${requests.map((r) => '( ${registry.encode(r.id)}, ${registry.encode(r.ip)}, ${registry.encode(r.serverName)}, ${registry.encode(r.countUsers)}, ${registry.encode(r.regionId)} )').join(', ')} )\n'
       'AS UPDATED("id", "ip", "server_name", "count_users", "region_id")\n'
-      'WHERE "server_models"."id" = UPDATED."id"',
+      'WHERE "servers"."id" = UPDATED."id"',
     );
   }
 
   @override
-  Future<void> delete(Database db, List<int> keys) async {
+  Future<void> delete(Database db, List<String> keys) async {
     if (keys.isEmpty) return;
     await db.query(
-      'DELETE FROM "server_models"\n'
-      'WHERE "server_models"."id" IN ( ${keys.map((k) => registry.encode(k)).join(',')} )',
+      'DELETE FROM "servers"\n'
+      'WHERE "servers"."id" IN ( ${keys.map((k) => registry.encode(k)).join(',')} )',
     );
   }
 }
@@ -219,25 +207,25 @@ class _ServerModelRepository extends BaseRepository
 abstract class RegionModelRepository
     implements
         ModelRepository,
-        KeyedModelRepositoryInsert<RegionModelInsertRequest>,
+        ModelRepositoryInsert<RegionModelInsertRequest>,
         ModelRepositoryUpdate<RegionModelUpdateRequest>,
-        ModelRepositoryDelete<int> {
+        ModelRepositoryDelete<String> {
   factory RegionModelRepository._(Database db) = _RegionModelRepository;
 
-  Future<RegionModel?> queryRegionModel(int id);
+  Future<RegionModel?> queryRegionModel(String id);
   Future<List<RegionModel>> queryRegionModels([QueryParams? params]);
 }
 
 class _RegionModelRepository extends BaseRepository
     with
-        KeyedRepositoryInsertMixin<RegionModelInsertRequest>,
+        RepositoryInsertMixin<RegionModelInsertRequest>,
         RepositoryUpdateMixin<RegionModelUpdateRequest>,
-        RepositoryDeleteMixin<int>
+        RepositoryDeleteMixin<String>
     implements RegionModelRepository {
   _RegionModelRepository(Database db) : super(db: db);
 
   @override
-  Future<RegionModel?> queryRegionModel(int id) {
+  Future<RegionModel?> queryRegionModel(String id) {
     return queryOne(id, RegionModelQueryable());
   }
 
@@ -247,200 +235,181 @@ class _RegionModelRepository extends BaseRepository
   }
 
   @override
-  Future<List<int>> insert(Database db, List<RegionModelInsertRequest> requests) async {
-    if (requests.isEmpty) return [];
-    var rows =
-        await db.query(requests.map((r) => "SELECT nextval('region_models_id_seq') as \"id\"").join('\nUNION ALL\n'));
-    var autoIncrements = rows.map((r) => r.toColumnMap()).toList();
+  Future<void> insert(Database db, List<RegionModelInsertRequest> requests) async {
+    if (requests.isEmpty) return;
 
     await db.query(
-      'INSERT INTO "region_models" ( "id", "region_name" )\n'
-      'VALUES ${requests.map((r) => '( ${registry.encode(autoIncrements[requests.indexOf(r)]['id'])}, ${registry.encode(r.regionName)} )').join(', ')}\n',
+      'INSERT INTO "regions" ( "id", "region_name" )\n'
+      'VALUES ${requests.map((r) => '( ${registry.encode(r.id)}, ${registry.encode(r.regionName)} )').join(', ')}\n'
+      'ON CONFLICT ( "id" ) DO UPDATE SET "region_name" = EXCLUDED."region_name"',
     );
-
-    return autoIncrements.map<int>((m) => registry.decode(m['id'])).toList();
   }
 
   @override
   Future<void> update(Database db, List<RegionModelUpdateRequest> requests) async {
     if (requests.isEmpty) return;
     await db.query(
-      'UPDATE "region_models"\n'
-      'SET "region_name" = COALESCE(UPDATED."region_name"::text, "region_models"."region_name")\n'
+      'UPDATE "regions"\n'
+      'SET "region_name" = COALESCE(UPDATED."region_name"::text, "regions"."region_name")\n'
       'FROM ( VALUES ${requests.map((r) => '( ${registry.encode(r.id)}, ${registry.encode(r.regionName)} )').join(', ')} )\n'
       'AS UPDATED("id", "region_name")\n'
-      'WHERE "region_models"."id" = UPDATED."id"',
+      'WHERE "regions"."id" = UPDATED."id"',
     );
   }
 
   @override
-  Future<void> delete(Database db, List<int> keys) async {
+  Future<void> delete(Database db, List<String> keys) async {
     if (keys.isEmpty) return;
     await db.query(
-      'DELETE FROM "region_models"\n'
-      'WHERE "region_models"."id" IN ( ${keys.map((k) => registry.encode(k)).join(',')} )',
+      'DELETE FROM "regions"\n'
+      'WHERE "regions"."id" IN ( ${keys.map((k) => registry.encode(k)).join(',')} )',
     );
   }
 }
 
 class UserModelInsertRequest {
   UserModelInsertRequest(
-      {required this.telegramId,
-      required this.username,
-      required this.firstName,
-      required this.lastName,
+      {required this.id,
+      required this.telegramId,
+      this.username,
       required this.balance,
       required this.freePeriodUsed,
-      required this.currentCertificateId});
+      this.currentCertificateId});
+  String id;
   String telegramId;
-  String username;
-  String firstName;
-  String lastName;
+  String? username;
   int balance;
   bool freePeriodUsed;
-  int currentCertificateId;
+  String? currentCertificateId;
 }
 
 class SertificateModelInsertRequest {
   SertificateModelInsertRequest(
       {required this.userId,
+      required this.id,
       required this.privateKey,
       required this.publicKey,
       required this.serverId,
       required this.dateCreate});
-  int userId;
+  String userId;
+  String id;
   String privateKey;
   String publicKey;
-  int serverId;
+  String serverId;
   DateTime dateCreate;
 }
 
 class ServerModelInsertRequest {
   ServerModelInsertRequest(
-      {required this.ip, required this.serverName, required this.countUsers, required this.regionId});
+      {required this.id, required this.ip, required this.serverName, required this.countUsers, required this.regionId});
+  String id;
   String ip;
   String serverName;
   int countUsers;
-  int regionId;
+  String regionId;
 }
 
 class RegionModelInsertRequest {
-  RegionModelInsertRequest({required this.regionName});
+  RegionModelInsertRequest({required this.id, required this.regionName});
+  String id;
   String regionName;
 }
 
 class UserModelUpdateRequest {
   UserModelUpdateRequest(
-      {required this.id,
-      this.telegramId,
-      this.username,
-      this.firstName,
-      this.lastName,
-      this.balance,
-      this.freePeriodUsed,
-      this.currentCertificateId});
-  int id;
+      {required this.id, this.telegramId, this.username, this.balance, this.freePeriodUsed, this.currentCertificateId});
+  String id;
   String? telegramId;
   String? username;
-  String? firstName;
-  String? lastName;
   int? balance;
   bool? freePeriodUsed;
-  int? currentCertificateId;
+  String? currentCertificateId;
 }
 
 class SertificateModelUpdateRequest {
   SertificateModelUpdateRequest(
       {this.userId, required this.id, this.privateKey, this.publicKey, this.serverId, this.dateCreate});
-  int? userId;
-  int id;
+  String? userId;
+  String id;
   String? privateKey;
   String? publicKey;
-  int? serverId;
+  String? serverId;
   DateTime? dateCreate;
 }
 
 class ServerModelUpdateRequest {
   ServerModelUpdateRequest({required this.id, this.ip, this.serverName, this.countUsers, this.regionId});
-  int id;
+  String id;
   String? ip;
   String? serverName;
   int? countUsers;
-  int? regionId;
+  String? regionId;
 }
 
 class RegionModelUpdateRequest {
   RegionModelUpdateRequest({required this.id, this.regionName});
-  int id;
+  String id;
   String? regionName;
 }
 
-class UserModelQueryable extends KeyedViewQueryable<UserModel, int> {
+class UserModelQueryable extends KeyedViewQueryable<UserModel, String> {
   @override
   String get keyName => 'id';
 
   @override
-  String encodeKey(int key) => registry.encode(key);
+  String encodeKey(String key) => registry.encode(key);
 
   @override
-  String get tableName => 'user_models_view';
+  String get tableName => 'users_view';
 
   @override
-  String get tableAlias => 'user_models';
+  String get tableAlias => 'users';
 
   @override
   UserModel decode(TypedMap map) => UserModelView(
       id: map.get('id', registry.decode),
       telegramId: map.get('telegram_id', registry.decode),
-      username: map.get('username', registry.decode),
-      firstName: map.get('first_name', registry.decode),
-      lastName: map.get('last_name', registry.decode),
+      username: map.getOpt('username', registry.decode),
       balance: map.get('balance', registry.decode),
       freePeriodUsed: map.get('free_period_used', registry.decode),
-      currentCertificate: map.get('currentCertificate', SertificateModelQueryable().decoder));
+      currentCertificate: map.getOpt('currentCertificate', SertificateModelQueryable().decoder));
 }
 
 class UserModelView implements UserModel {
   UserModelView(
       {required this.id,
       required this.telegramId,
-      required this.username,
-      required this.firstName,
-      required this.lastName,
+      this.username,
       required this.balance,
       required this.freePeriodUsed,
-      required this.currentCertificate});
+      this.currentCertificate});
 
   @override
-  final int id;
+  final String id;
   @override
   final String telegramId;
   @override
-  final String username;
-  @override
-  final String firstName;
-  @override
-  final String lastName;
+  final String? username;
   @override
   final int balance;
   @override
   final bool freePeriodUsed;
   @override
-  final SertificateModel currentCertificate;
+  final SertificateModel? currentCertificate;
 }
 
-class SertificateModelQueryable extends KeyedViewQueryable<SertificateModel, int> {
+class SertificateModelQueryable extends KeyedViewQueryable<SertificateModel, String> {
   @override
   String get keyName => 'id';
 
   @override
-  String encodeKey(int key) => registry.encode(key);
+  String encodeKey(String key) => registry.encode(key);
 
   @override
-  String get tableName => 'sertificate_models_view';
+  String get tableName => 'sertificates_view';
 
   @override
-  String get tableAlias => 'sertificate_models';
+  String get tableAlias => 'sertificates';
 
   @override
   SertificateModel decode(TypedMap map) => SertificateModelView(
@@ -464,7 +433,7 @@ class SertificateModelView implements SertificateModel {
   @override
   final UserModel user;
   @override
-  final int id;
+  final String id;
   @override
   final String privateKey;
   @override
@@ -475,18 +444,18 @@ class SertificateModelView implements SertificateModel {
   final DateTime dateCreate;
 }
 
-class ServerModelQueryable extends KeyedViewQueryable<ServerModel, int> {
+class ServerModelQueryable extends KeyedViewQueryable<ServerModel, String> {
   @override
   String get keyName => 'id';
 
   @override
-  String encodeKey(int key) => registry.encode(key);
+  String encodeKey(String key) => registry.encode(key);
 
   @override
-  String get tableName => 'server_models_view';
+  String get tableName => 'servers_view';
 
   @override
-  String get tableAlias => 'server_models';
+  String get tableAlias => 'servers';
 
   @override
   ServerModel decode(TypedMap map) => ServerModelView(
@@ -502,7 +471,7 @@ class ServerModelView implements ServerModel {
       {required this.id, required this.ip, required this.serverName, required this.countUsers, required this.region});
 
   @override
-  final int id;
+  final String id;
   @override
   final String ip;
   @override
@@ -513,18 +482,18 @@ class ServerModelView implements ServerModel {
   final RegionModel region;
 }
 
-class RegionModelQueryable extends KeyedViewQueryable<RegionModel, int> {
+class RegionModelQueryable extends KeyedViewQueryable<RegionModel, String> {
   @override
   String get keyName => 'id';
 
   @override
-  String encodeKey(int key) => registry.encode(key);
+  String encodeKey(String key) => registry.encode(key);
 
   @override
-  String get tableName => 'region_models_view';
+  String get tableName => 'regions_view';
 
   @override
-  String get tableAlias => 'region_models';
+  String get tableAlias => 'regions';
 
   @override
   RegionModel decode(TypedMap map) =>
@@ -535,7 +504,7 @@ class RegionModelView implements RegionModel {
   RegionModelView({required this.id, required this.regionName});
 
   @override
-  final int id;
+  final String id;
   @override
   final String regionName;
 }

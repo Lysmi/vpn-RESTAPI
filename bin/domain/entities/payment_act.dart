@@ -1,17 +1,21 @@
+import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'package:uuid/uuid.dart';
+
 import 'user.dart';
 
+@jsonSerializable
 class PaymentAct {
-  int? id;
+  String id;
   User user;
   int sum;
   DateTime date;
 
   PaymentAct({
-    this.id,
+    id,
     required this.date,
     required this.sum,
     required this.user,
-  });
+  }) : id = id ?? Uuid().v4();
 
   PaymentAct copyWith({
     id,

@@ -1,25 +1,25 @@
+import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'package:uuid/uuid.dart';
+
 import 'sertificate.dart';
 
+@jsonSerializable
 class User {
-  int? id;
+  String id;
   String telegramId;
   String username;
-  String firstName;
-  String lastName;
   int balance;
   bool freePeriodUsed;
   Sertificate? currentCertificate;
 
   User({
-    this.id,
+    id,
     required this.telegramId,
     this.balance = 0,
     this.currentCertificate,
-    this.firstName = '',
     this.freePeriodUsed = false,
-    this.lastName = '',
     this.username = '',
-  });
+  }) : id = id ?? Uuid().v4();
 
   User copyWith({
     int? id,
@@ -35,8 +35,6 @@ class User {
       id: id ?? this.id,
       telegramId: telegramId ?? this.telegramId,
       username: username ?? this.username,
-      firstName: firstName ?? this.firstName,
-      lastName: lastName ?? this.lastName,
       balance: balance ?? this.balance,
       freePeriodUsed: freePeriodUsed ?? this.freePeriodUsed,
       currentCertificate: currentCertificate ?? this.currentCertificate,

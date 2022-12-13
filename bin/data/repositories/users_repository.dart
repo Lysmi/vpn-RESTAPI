@@ -12,7 +12,7 @@ class UserRepository extends IUsersRepository {
   }
 
   @override
-  Future<User?> getUserById(int id) {
+  Future<User?> getUserById(String id) {
     return _dataProvider.getUserById(id);
   }
 }

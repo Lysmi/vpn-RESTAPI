@@ -15,17 +15,19 @@ import 'data/providers/postgresql/postgresql_data_provider.dart';
 import 'data/repositories/users_repository.dart';
 import 'domain/repositories/users_repository_interface.dart';
 import 'domain/usecases/get_user_usecase.dart';
+import 'gateway.mapper.g.dart' show initializeJsonMapper;
 
 //register all get_it models
 void getItRegister() {
-  GetIt.I.registerSingleton<Database>(Database(
+  var db = Database(
     host: EnvironmentConfig.host,
     port: EnvironmentConfig.port.toInt(),
     database: EnvironmentConfig.database,
     user: EnvironmentConfig.username,
-    password: EnvironmentConfig.password,
-  ));
-
+    password: '0660838337',
+    useSSL: false,
+  );
+  GetIt.I.registerSingleton<Database>(db);
   GetIt.I.registerSingleton<IDataProvider>(PostgresqlDataProvider());
   GetIt.I.registerSingleton<IUsersRepository>(UserRepository());
 }
@@ -35,9 +37,11 @@ void usecasesRegister() {
 }
 
 void main(List<String> args) async {
+  initializeJsonMapper();
+
   // Use any available host or container IP (usually `0.0.0.0`).
   getItRegister();
-  usecasesRegister;
+  usecasesRegister();
   final ip = InternetAddress.anyIPv4;
   final swaggerPath = 'swagger.yaml';
 
