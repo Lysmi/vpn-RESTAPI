@@ -1,7 +1,5 @@
 import 'package:stormberry/stormberry.dart';
 
-import 'server_model.dart';
-
 @Model()
 abstract class RegionModel {
   @PrimaryKey()

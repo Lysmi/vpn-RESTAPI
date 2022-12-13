@@ -1,13 +1,12 @@
 import 'package:shelf/shelf.dart';
 
-import 'IController.dart';
+import 'controller_interface.dart';
 
 class ServerController extends IController {
   ServerController({required super.router});
 
   @override
   ServerController addHandlers() {
-    // TODO: implement addHandlers
     router
       ..get('/servers', _getAllServers)
       ..post('/servers', _postAddServer)

@@ -1,6 +1,6 @@
 import 'package:shelf/shelf.dart';
 
-import 'IController.dart';
+import 'controller_interface.dart';
 
 class UserController extends IController {
   UserController({required super.router});
