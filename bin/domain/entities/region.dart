@@ -5,6 +5,9 @@ class Region {
   Region({this.id, required this.regionName});
 
   Region copyWidth({id, regionName}) {
-    return Region(regionName: regionName, id: id);
+    return Region(
+      regionName: regionName,
+      id: id,
+    );
   }
 }

@@ -16,17 +16,15 @@ abstract class UserModel {
   int get balance;
   bool get freePeriodUsed;
   SertificateModel get currentCertificate;
-
-  User toEntity() {
-    return User(
-      id: id,
-      telegramId: telegramId,
-      username: username,
-      firstName: firstName,
-      lastName: lastName,
-      balance: balance,
-      freePeriodUsed: freePeriodUsed,
-      currentCertificate: currentCertificate.toEntity(),
-    );
-  }
 }
+
+User userToEntity(UserModel model) => User(
+      id: model.id,
+      telegramId: model.telegramId,
+      username: model.username,
+      firstName: model.firstName,
+      lastName: model.lastName,
+      balance: model.balance,
+      freePeriodUsed: model.freePeriodUsed,
+      currentCertificate: sertificateToEntity(model.currentCertificate),
+    );

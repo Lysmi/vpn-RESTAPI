@@ -13,12 +13,12 @@ abstract class ServerModel {
   String get serverName;
   int get countUsers;
   RegionModel get region;
-
-  Server toEntity() => Server(
-        id: id,
-        countUsers: countUsers,
-        ip: ip,
-        serverName: serverName,
-        region: region.toEntity(),
-      );
 }
+
+Server serverToEntity(ServerModel model) => Server(
+      id: model.id,
+      countUsers: model.countUsers,
+      ip: model.ip,
+      serverName: model.serverName,
+      region: regionToEntity(model.region),
+    );

@@ -15,12 +15,12 @@ abstract class SertificateModel {
   ServerModel get server;
   DateTime get dateCreate;
   UserModel get user;
-
-  Sertificate toEntity() => Sertificate(
-        id: id,
-        dateCreate: dateCreate,
-        privateKey: privateKey,
-        publicKey: publicKey,
-        server: server.toEntity(),
-      );
 }
+
+Sertificate sertificateToEntity(SertificateModel model) => Sertificate(
+      id: model.id,
+      dateCreate: model.dateCreate,
+      privateKey: model.privateKey,
+      publicKey: model.publicKey,
+      server: serverToEntity(model.server),
+    );

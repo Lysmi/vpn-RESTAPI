@@ -1,5 +1,7 @@
+import 'package:get_it/get_it.dart';
 import 'package:shelf/shelf.dart';
 
+import '../domain/usecases/get_user_usecase.dart';
 import 'controller_interface.dart';
 
 class UserController extends IController {
@@ -17,8 +19,9 @@ class UserController extends IController {
     return this;
   }
 
-  Response _getUserByIdHandler(Request req, int userId) {
-    //TODO implement
+  Future<Response> _getUserByIdHandler(Request req, int userId) async {
+    final getUserUsecase = GetIt.I<GetUserUsecase>();
+    print(getUserUsecase.getUserById(0));
     return Response.ok('Hello, World!\n');
   }
 

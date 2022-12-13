@@ -14,6 +14,7 @@ import 'data/providers/data_provider_interface.dart';
 import 'data/providers/postgresql/postgresql_data_provider.dart';
 import 'data/repositories/users_repository.dart';
 import 'domain/repositories/users_repository_interface.dart';
+import 'domain/usecases/get_user_usecase.dart';
 
 //register all get_it models
 void getItRegister() {
@@ -29,9 +30,14 @@ void getItRegister() {
   GetIt.I.registerSingleton<IUsersRepository>(UserRepository());
 }
 
+void usecasesRegister() {
+  GetIt.I.registerSingleton<GetUserUsecase>(GetUserUsecase());
+}
+
 void main(List<String> args) async {
   // Use any available host or container IP (usually `0.0.0.0`).
   getItRegister();
+  usecasesRegister;
   final ip = InternetAddress.anyIPv4;
   final swaggerPath = 'swagger.yaml';
 
