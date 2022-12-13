@@ -7,12 +7,12 @@ import '../providers/data_provider_interface.dart';
 class UserRepository extends IUsersRepository {
   final IDataProvider _dataProvider = GetIt.I<IDataProvider>();
   @override
-  List<User> getAllUsers() {
+  Future<List<User>> getAllUsers() {
     return _dataProvider.getAllUsers();
   }
 
   @override
-  User getUserById(int id) {
+  Future<User?> getUserById(int id) {
     return _dataProvider.getUserById(id);
   }
 }

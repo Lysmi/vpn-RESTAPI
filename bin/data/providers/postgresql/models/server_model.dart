@@ -1,5 +1,6 @@
 import 'package:stormberry/stormberry.dart';
 
+import '../../../../domain/entities/server.dart';
 import 'region_model.dart';
 
 @Model()
@@ -12,4 +13,12 @@ abstract class ServerModel {
   String get serverName;
   int get countUsers;
   RegionModel get region;
+
+  Server toEntity() => Server(
+        id: id,
+        countUsers: countUsers,
+        ip: ip,
+        serverName: serverName,
+        region: region.toEntity(),
+      );
 }

@@ -5,11 +5,11 @@ import '../repositories/users_repository_interface.dart';
 
 class GetUserUsecase {
   IUsersRepository userRep = GetIt.I<IUsersRepository>();
-  List<User> getAllUsers() {
+  Future<List<User>> getAllUsers() {
     return userRep.getAllUsers();
   }
 
-  User getUserById(int id) {
+  Future<User?> getUserById(int id) {
     return userRep.getUserById(id);
   }
 }

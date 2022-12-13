@@ -1,5 +1,6 @@
 import 'package:stormberry/stormberry.dart';
 
+import '../../../../domain/entities/sertificate.dart';
 import 'server_model.dart';
 import 'user_model.dart';
 
@@ -14,4 +15,12 @@ abstract class SertificateModel {
   ServerModel get server;
   DateTime get dateCreate;
   UserModel get user;
+
+  Sertificate toEntity() => Sertificate(
+        id: id,
+        dateCreate: dateCreate,
+        privateKey: privateKey,
+        publicKey: publicKey,
+        server: server.toEntity(),
+      );
 }
