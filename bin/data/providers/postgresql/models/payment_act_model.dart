@@ -13,9 +13,11 @@ abstract class PaymentActModel {
   DateTime get date;
 }
 
-PaymentAct regionToEntity(PaymentActModel model) => PaymentAct(
-      id: model.id,
-      user: userToEntity(model.user),
-      date: model.date,
-      sum: model.sum,
-    );
+extension ToEntity on PaymentActModel {
+  toEntity() => PaymentAct(
+        id: id,
+        user: user.toEntity(),
+        date: date,
+        sum: sum,
+      );
+}

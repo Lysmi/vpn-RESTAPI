@@ -79,6 +79,6 @@ environment_config:
         username:
           default: postgres
         password:
-          default: 0660838337
+          default: "0660838337"
         port:
           default: 5432

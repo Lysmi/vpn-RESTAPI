@@ -10,7 +10,9 @@ abstract class RegionModel {
   String get regionName;
 }
 
-Region regionToEntity(RegionModel model) => Region(
-      id: model.id,
-      regionName: model.regionName,
-    );
+extension ToEntity on RegionModel {
+  Region toEntity() => Region(
+        id: id,
+        regionName: regionName,
+      );
+}

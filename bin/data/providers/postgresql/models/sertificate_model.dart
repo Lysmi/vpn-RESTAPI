@@ -16,12 +16,12 @@ abstract class SertificateModel {
   UserModel get user;
 }
 
-Sertificate? sertificateToEntity(SertificateModel? model) => model == null
-    ? null
-    : Sertificate(
-        id: model.id,
-        dateCreate: model.dateCreate,
-        privateKey: model.privateKey,
-        publicKey: model.publicKey,
-        server: serverToEntity(model.server),
+extension ToEntity on SertificateModel {
+  Sertificate toEntity() => Sertificate(
+        id: id,
+        dateCreate: dateCreate,
+        privateKey: privateKey,
+        publicKey: publicKey,
+        server: server.toEntity(),
       );
+}

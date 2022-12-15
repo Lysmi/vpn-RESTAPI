@@ -24,7 +24,7 @@ void getItRegister() {
     port: EnvironmentConfig.port.toInt(),
     database: EnvironmentConfig.database,
     user: EnvironmentConfig.username,
-    password: '0660838337',
+    password: EnvironmentConfig.password,
     useSSL: false,
   );
   GetIt.I.registerSingleton<Database>(db);

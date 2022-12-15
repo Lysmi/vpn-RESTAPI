@@ -14,11 +14,13 @@ abstract class UserModel {
   SertificateModel? get currentCertificate;
 }
 
-User userToEntity(UserModel model) => User(
-      id: model.id,
-      telegramId: model.telegramId,
-      username: model.username ?? '',
-      balance: model.balance,
-      freePeriodUsed: model.freePeriodUsed,
-      currentCertificate: sertificateToEntity(model.currentCertificate ?? null),
-    );
+extension ToEntity on UserModel {
+  User toEntity() => User(
+        id: id,
+        telegramId: telegramId,
+        username: username ?? '',
+        balance: balance,
+        freePeriodUsed: freePeriodUsed,
+        currentCertificate: currentCertificate?.toEntity(),
+      );
+}

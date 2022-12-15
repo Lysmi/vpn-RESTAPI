@@ -14,10 +14,12 @@ abstract class ServerModel {
   RegionModel get region;
 }
 
-Server serverToEntity(ServerModel model) => Server(
-      id: model.id,
-      countUsers: model.countUsers,
-      ip: model.ip,
-      serverName: model.serverName,
-      region: regionToEntity(model.region),
-    );
+extension ToEntity on ServerModel {
+  Server toEntity() => Server(
+        id: id,
+        countUsers: countUsers,
+        ip: ip,
+        serverName: serverName,
+        region: region.toEntity(),
+      );
+}

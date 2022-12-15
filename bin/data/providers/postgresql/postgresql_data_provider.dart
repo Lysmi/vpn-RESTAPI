@@ -11,17 +11,13 @@ class PostgresqlDataProvider extends IDataProvider {
   @override
   Future<List<User>> getAllUsers() async {
     return (await db.userModels.queryUserModels())
-        .map((e) => userToEntity(e))
+        .map((e) => e.toEntity())
         .toList();
   }
 
   @override
   Future<User?> getUserById(String id) async {
     final userModel = await db.userModels.queryUserModel(id);
-    if (userModel != null) {
-      return userToEntity(userModel);
-    } else {
-      return null;
-    }
+    return userModel?.toEntity();
   }
 }
