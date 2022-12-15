@@ -1,3 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:uuid/uuid.dart';
 
@@ -11,21 +14,77 @@ class Sertificate {
   Server server;
   DateTime dateCreate;
 
-  Sertificate(
-      {required this.dateCreate,
-      id,
-      required this.privateKey,
-      required this.publicKey,
-      required this.server})
-      : id = id ?? Uuid().v4();
+  Sertificate({
+    id,
+    required this.privateKey,
+    required this.publicKey,
+    required this.server,
+    required this.dateCreate,
+  }) : id = id ?? Uuid().v4();
 
-  Sertificate copyWith({dateCreate, id, privateKey, publicKey, server}) {
+  Sertificate copyWith({
+    String? id,
+    String? privateKey,
+    String? publicKey,
+    Server? server,
+    DateTime? dateCreate,
+  }) {
     return Sertificate(
-      dateCreate: dateCreate ?? this.dateCreate,
       id: id ?? this.id,
       privateKey: privateKey ?? this.privateKey,
       publicKey: publicKey ?? this.publicKey,
       server: server ?? this.server,
+      dateCreate: dateCreate ?? this.dateCreate,
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'privateKey': privateKey,
+      'publicKey': publicKey,
+      'server': server.toMap(),
+      'dateCreate': dateCreate.millisecondsSinceEpoch,
+    };
+  }
+
+  factory Sertificate.fromMap(Map<String, dynamic> map) {
+    return Sertificate(
+      id: map['id'] as String,
+      privateKey: map['privateKey'] as String,
+      publicKey: map['publicKey'] as String,
+      server: Server.fromMap(map['server'] as Map<String, dynamic>),
+      dateCreate: DateTime.fromMillisecondsSinceEpoch(map['dateCreate'] as int),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Sertificate.fromJson(String source) =>
+      Sertificate.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'Sertificate(id: $id, privateKey: $privateKey, publicKey: $publicKey, server: $server, dateCreate: $dateCreate)';
+  }
+
+  @override
+  bool operator ==(covariant Sertificate other) {
+    if (identical(this, other)) return true;
+
+    return other.id == id &&
+        other.privateKey == privateKey &&
+        other.publicKey == publicKey &&
+        other.server == server &&
+        other.dateCreate == dateCreate;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        privateKey.hashCode ^
+        publicKey.hashCode ^
+        server.hashCode ^
+        dateCreate.hashCode;
   }
 }
