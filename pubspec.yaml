@@ -82,3 +82,15 @@ environment_config:
           default: "0660838337"
         port:
           default: 5432
+    yukkop:
+      fields: # set of fields for command
+        host: # key name
+          default: localhost # optional, default value for key, if not provided key will be required during command run
+        database:
+          default: gwp.vpn-main
+        username:
+          default: postgres
+        password:
+          default: postgres
+        port:
+          default: 5432
