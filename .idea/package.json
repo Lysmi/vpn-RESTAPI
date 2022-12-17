@@ -1,0 +1,5 @@
+﻿{
+  "scripts": {
+    "costilyaka": "cd ../ && dart pub run build_runner build"
+  }
+}
