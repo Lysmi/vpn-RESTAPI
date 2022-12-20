@@ -4,14 +4,17 @@ import 'controller_interface.dart';
 
 class ServerController extends IController {
   ServerController({required super.router});
+  
+  final _url = '/api/server';
 
   @override
   ServerController addHandlers() {
     router
-      ..get('/servers', _getAllServers)
-      ..post('/servers', _postAddServer)
-      ..patch('/servers', _patchServer)
-      ..get('/servers/<serverId>', _getServerById);
+      ..get(_url, _getAllServers)
+      ..post(_url, _postAddServer)
+      ..patch(_url, _patchServer)
+      ..get('$_url/<serverId>', _getServerById);
+    
     return this;
   }
 

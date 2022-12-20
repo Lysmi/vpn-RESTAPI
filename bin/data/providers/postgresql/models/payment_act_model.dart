@@ -1,4 +1,5 @@
 import 'package:stormberry/stormberry.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../../domain/entities/payment_act.dart';
 import 'user_model.dart';
@@ -6,8 +7,7 @@ import 'user_model.dart';
 @Model(tableName: 'payment_acts')
 abstract class PaymentActModel {
   @PrimaryKey()
-  String get id;
-
+  Uuid get id;
   UserModel get user;
   int get sum;
   DateTime get date;

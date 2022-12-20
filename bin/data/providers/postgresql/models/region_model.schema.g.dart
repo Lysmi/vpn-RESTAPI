@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_relative_imports
 import 'package:stormberry/internals.dart';
+import 'package:uuid/uuid.dart';
 
 import 'region_model.dart';
 
@@ -14,10 +15,10 @@ abstract class RegionModelRepository
         ModelRepository,
         ModelRepositoryInsert<RegionModelInsertRequest>,
         ModelRepositoryUpdate<RegionModelUpdateRequest>,
-        ModelRepositoryDelete<String> {
+        ModelRepositoryDelete<Uuid> {
   factory RegionModelRepository._(Database db) = _RegionModelRepository;
 
-  Future<RegionModel?> queryRegionModel(String id);
+  Future<RegionModel?> queryRegionModel(Uuid id);
   Future<List<RegionModel>> queryRegionModels([QueryParams? params]);
 }
 
@@ -25,12 +26,12 @@ class _RegionModelRepository extends BaseRepository
     with
         RepositoryInsertMixin<RegionModelInsertRequest>,
         RepositoryUpdateMixin<RegionModelUpdateRequest>,
-        RepositoryDeleteMixin<String>
+        RepositoryDeleteMixin<Uuid>
     implements RegionModelRepository {
   _RegionModelRepository(Database db) : super(db: db);
 
   @override
-  Future<RegionModel?> queryRegionModel(String id) {
+  Future<RegionModel?> queryRegionModel(Uuid id) {
     return queryOne(id, RegionModelQueryable());
   }
 
@@ -63,7 +64,7 @@ class _RegionModelRepository extends BaseRepository
   }
 
   @override
-  Future<void> delete(Database db, List<String> keys) async {
+  Future<void> delete(Database db, List<Uuid> keys) async {
     if (keys.isEmpty) return;
     await db.query(
       'DELETE FROM "regions"\n'
@@ -74,22 +75,22 @@ class _RegionModelRepository extends BaseRepository
 
 class RegionModelInsertRequest {
   RegionModelInsertRequest({required this.id, required this.regionName});
-  String id;
+  Uuid id;
   String regionName;
 }
 
 class RegionModelUpdateRequest {
   RegionModelUpdateRequest({required this.id, this.regionName});
-  String id;
+  Uuid id;
   String? regionName;
 }
 
-class RegionModelQueryable extends KeyedViewQueryable<RegionModel, String> {
+class RegionModelQueryable extends KeyedViewQueryable<RegionModel, Uuid> {
   @override
   String get keyName => 'id';
 
   @override
-  String encodeKey(String key) => registry.encode(key);
+  String encodeKey(Uuid key) => registry.encode(key);
 
   @override
   String get tableName => 'regions_view';
@@ -106,7 +107,7 @@ class RegionModelView implements RegionModel {
   RegionModelView({required this.id, required this.regionName});
 
   @override
-  final String id;
+  final Uuid id;
   @override
   final String regionName;
 }

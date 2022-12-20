@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_relative_imports
 import 'package:stormberry/internals.dart';
+import 'package:uuid/uuid.dart';
 
 import 'region_model.dart';
 import 'server_model.dart';
@@ -16,10 +17,10 @@ abstract class ServerModelRepository
         ModelRepository,
         ModelRepositoryInsert<ServerModelInsertRequest>,
         ModelRepositoryUpdate<ServerModelUpdateRequest>,
-        ModelRepositoryDelete<String> {
+        ModelRepositoryDelete<Uuid> {
   factory ServerModelRepository._(Database db) = _ServerModelRepository;
 
-  Future<ServerModel?> queryServerModel(String id);
+  Future<ServerModel?> queryServerModel(Uuid id);
   Future<List<ServerModel>> queryServerModels([QueryParams? params]);
 }
 
@@ -27,12 +28,12 @@ class _ServerModelRepository extends BaseRepository
     with
         RepositoryInsertMixin<ServerModelInsertRequest>,
         RepositoryUpdateMixin<ServerModelUpdateRequest>,
-        RepositoryDeleteMixin<String>
+        RepositoryDeleteMixin<Uuid>
     implements ServerModelRepository {
   _ServerModelRepository(Database db) : super(db: db);
 
   @override
-  Future<ServerModel?> queryServerModel(String id) {
+  Future<ServerModel?> queryServerModel(Uuid id) {
     return queryOne(id, ServerModelQueryable());
   }
 
@@ -57,7 +58,7 @@ class _ServerModelRepository extends BaseRepository
     if (requests.isEmpty) return;
     await db.query(
       'UPDATE "servers"\n'
-      'SET "ip" = COALESCE(UPDATED."ip"::text, "servers"."ip"), "server_name" = COALESCE(UPDATED."server_name"::text, "servers"."server_name"), "count_users" = COALESCE(UPDATED."count_users"::int8, "servers"."count_users"), "region_id" = COALESCE(UPDATED."region_id"::text, "servers"."region_id")\n'
+      'SET "ip" = COALESCE(UPDATED."ip"::text, "servers"."ip"), "server_name" = COALESCE(UPDATED."server_name"::text, "servers"."server_name"), "count_users" = COALESCE(UPDATED."count_users"::int8, "servers"."count_users"), "region_id" = COALESCE(UPDATED."region_id"::jsonb, "servers"."region_id")\n'
       'FROM ( VALUES ${requests.map((r) => '( ${registry.encode(r.id)}, ${registry.encode(r.ip)}, ${registry.encode(r.serverName)}, ${registry.encode(r.countUsers)}, ${registry.encode(r.regionId)} )').join(', ')} )\n'
       'AS UPDATED("id", "ip", "server_name", "count_users", "region_id")\n'
       'WHERE "servers"."id" = UPDATED."id"',
@@ -65,7 +66,7 @@ class _ServerModelRepository extends BaseRepository
   }
 
   @override
-  Future<void> delete(Database db, List<String> keys) async {
+  Future<void> delete(Database db, List<Uuid> keys) async {
     if (keys.isEmpty) return;
     await db.query(
       'DELETE FROM "servers"\n'
@@ -79,10 +80,10 @@ abstract class RegionModelRepository
         ModelRepository,
         ModelRepositoryInsert<RegionModelInsertRequest>,
         ModelRepositoryUpdate<RegionModelUpdateRequest>,
-        ModelRepositoryDelete<String> {
+        ModelRepositoryDelete<Uuid> {
   factory RegionModelRepository._(Database db) = _RegionModelRepository;
 
-  Future<RegionModel?> queryRegionModel(String id);
+  Future<RegionModel?> queryRegionModel(Uuid id);
   Future<List<RegionModel>> queryRegionModels([QueryParams? params]);
 }
 
@@ -90,12 +91,12 @@ class _RegionModelRepository extends BaseRepository
     with
         RepositoryInsertMixin<RegionModelInsertRequest>,
         RepositoryUpdateMixin<RegionModelUpdateRequest>,
-        RepositoryDeleteMixin<String>
+        RepositoryDeleteMixin<Uuid>
     implements RegionModelRepository {
   _RegionModelRepository(Database db) : super(db: db);
 
   @override
-  Future<RegionModel?> queryRegionModel(String id) {
+  Future<RegionModel?> queryRegionModel(Uuid id) {
     return queryOne(id, RegionModelQueryable());
   }
 
@@ -128,7 +129,7 @@ class _RegionModelRepository extends BaseRepository
   }
 
   @override
-  Future<void> delete(Database db, List<String> keys) async {
+  Future<void> delete(Database db, List<Uuid> keys) async {
     if (keys.isEmpty) return;
     await db.query(
       'DELETE FROM "regions"\n'
@@ -140,40 +141,40 @@ class _RegionModelRepository extends BaseRepository
 class ServerModelInsertRequest {
   ServerModelInsertRequest(
       {required this.id, required this.ip, required this.serverName, required this.countUsers, required this.regionId});
-  String id;
+  Uuid id;
   String ip;
   String serverName;
   int countUsers;
-  String regionId;
+  Uuid regionId;
 }
 
 class RegionModelInsertRequest {
   RegionModelInsertRequest({required this.id, required this.regionName});
-  String id;
+  Uuid id;
   String regionName;
 }
 
 class ServerModelUpdateRequest {
   ServerModelUpdateRequest({required this.id, this.ip, this.serverName, this.countUsers, this.regionId});
-  String id;
+  Uuid id;
   String? ip;
   String? serverName;
   int? countUsers;
-  String? regionId;
+  Uuid? regionId;
 }
 
 class RegionModelUpdateRequest {
   RegionModelUpdateRequest({required this.id, this.regionName});
-  String id;
+  Uuid id;
   String? regionName;
 }
 
-class ServerModelQueryable extends KeyedViewQueryable<ServerModel, String> {
+class ServerModelQueryable extends KeyedViewQueryable<ServerModel, Uuid> {
   @override
   String get keyName => 'id';
 
   @override
-  String encodeKey(String key) => registry.encode(key);
+  String encodeKey(Uuid key) => registry.encode(key);
 
   @override
   String get tableName => 'servers_view';
@@ -195,7 +196,7 @@ class ServerModelView implements ServerModel {
       {required this.id, required this.ip, required this.serverName, required this.countUsers, required this.region});
 
   @override
-  final String id;
+  final Uuid id;
   @override
   final String ip;
   @override
@@ -206,12 +207,12 @@ class ServerModelView implements ServerModel {
   final RegionModel region;
 }
 
-class RegionModelQueryable extends KeyedViewQueryable<RegionModel, String> {
+class RegionModelQueryable extends KeyedViewQueryable<RegionModel, Uuid> {
   @override
   String get keyName => 'id';
 
   @override
-  String encodeKey(String key) => registry.encode(key);
+  String encodeKey(Uuid key) => registry.encode(key);
 
   @override
   String get tableName => 'regions_view';
@@ -228,7 +229,7 @@ class RegionModelView implements RegionModel {
   RegionModelView({required this.id, required this.regionName});
 
   @override
-  final String id;
+  final Uuid id;
   @override
   final String regionName;
 }

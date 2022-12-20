@@ -1,4 +1,5 @@
 import 'package:stormberry/stormberry.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../../domain/entities/server.dart';
 import 'region_model.dart';
@@ -6,8 +7,7 @@ import 'region_model.dart';
 @Model(tableName: 'servers')
 abstract class ServerModel {
   @PrimaryKey()
-  String get id;
-
+  Uuid get id;
   String get ip;
   String get serverName;
   int get countUsers;
