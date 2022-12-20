@@ -1,11 +1,53 @@
 openapi: 3.0.0
 info:
-  description: "API system"
-  version: "1.0.10"
-  title: "Swagger Test"
+  description: "VPN System"
+  version: "0.1.beta"
+  title: "Documentation"
 servers:
-  - url: http://my-service.info
+  - url: http://localhost:8080/api
     description: Remote server
+paths:
+  /user/<id>:
+    get:
+      description: Returns user by id from the system 
+      parameters:
+        - name: limit
+          in: query
+          description: Limits the number of items on a page
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: Specifies the page number of the artists to be displayed
+          schema:
+            type: integer
+      tags:
+        - user
+      responses:
+        '200':
+          description: A user model.
+          content:
+            application/json:
+              schema:
+                type: string
+  /user:
+    get:
+      description: Returns all pets from the system that the user has access to
+      tags:
+        - user
+      responses:
+        '200':
+          description: A list of pets.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/pet'
 tags:
-  - name: "user"
+  - name: user
     description: "Access to User"
+  - name: server
+    description: ""
+  - name: config
+    description: ""

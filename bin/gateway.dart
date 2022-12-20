@@ -16,6 +16,7 @@ import 'data/providers/postgresql/postgresql_data_provider.dart';
 import 'data/repositories/users_repository.dart';
 import 'domain/repositories/users_repository_interface.dart';
 import 'domain/usecases/get_user_usecase.dart';
+import 'extensions/shelf_swagger_ui_extends.dart';
 import 'gateway.mapper.g.dart' show initializeJsonMapper;
 
 //register all get_it models
@@ -44,7 +45,7 @@ void main(List<String> args) async {
   getItRegister();
   usecasesRegister();
   final ip = InternetAddress.anyIPv4;
-  final swaggerPath = 'swagger.yaml';
+  final swaggerPath = '/api/config/swagger.yaml';
 
   final router = Router();
 
@@ -52,7 +53,7 @@ void main(List<String> args) async {
   UserController(router: router).addHandlers();
   ServerController(router: router).addHandlers();
 
-  final swaggerHandler = SwaggerUI(swaggerPath, title: 'Swagger Test');
+  final swaggerHandler = BetterSwaggerUi(swaggerPath, title: 'Swagger Test', deepLink: true);
   router.get("/swagger", swaggerHandler.call);
 
   // Configure a pipeline that logs requests.
