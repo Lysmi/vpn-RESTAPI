@@ -38,7 +38,8 @@ class UserController extends IController {
   Future<Response> _postAddUserHandler(Request req) async {
     //TODO implement
     final addUserUsecase = GetIt.I<AddUserUsecase>();
-    var postData = jsonDecode(await req.readAsString());
+    var body = await req.readAsString();
+    var postData = jsonDecode(body);
     var sertificate =
         await addUserUsecase.addUsers(User(telegramId: postData['telegramId']));
     return Response.ok(jsonEncode(JsonMapper.serialize(sertificate)));
