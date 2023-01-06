@@ -63,13 +63,13 @@ environment_config:
         host: # key name
           default: localhost # optional, default value for key, if not provided key will be required during command run
         database:
-          default: main-vpn
+          default: vpnrest
         username:
           default: postgres
         password:
-          default: 0660838337
+          default: pass
         port:
-          default: 5432
+          default: 5433
     max:
       fields: # set of fields for command
         host: # key name
