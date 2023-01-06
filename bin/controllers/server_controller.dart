@@ -1,5 +1,12 @@
+import 'dart:convert';
+
+import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shelf/shelf.dart';
 
+import '../domain/entities/region.dart';
+import '../domain/entities/server.dart' as entity;
+import '../domain/usecases/server_usecase.dart';
 import 'controller_interface.dart';
 
 class ServerController extends IController {
@@ -15,14 +22,28 @@ class ServerController extends IController {
     return this;
   }
 
-  Response _getAllServers(Request req) {
-    //TODO: implement
-    return Response.ok('Unimplement');
+  Future<Response> _getAllServers(Request req) async {
+    final serverUsecase = GetIt.I<ServerUsecase>();
+    var servers = await serverUsecase.getServers();
+    return Response.ok(JsonMapper.serialize(servers));
   }
 
-  Response _postAddServer(Request req) {
-    //TODO: implement
-    return Response.ok('Unimplement');
+  // postData = {
+  //   "ip": "0.0.0.0",
+  //   "serverName": "lysmiServer",
+  // }
+  Future<Response> _postAddServer(Request req) async {
+    final serverUsecase = GetIt.I<ServerUsecase>();
+    var body = await req.readAsString();
+    var postData = jsonDecode(body);
+
+    serverUsecase.addServer(entity.Server(
+        ip: postData["ip"],
+        serverName: postData["serverName"],
+        countUsers: 0,
+        region: Region(regionName: 'ru')));
+
+    return Response.ok('Created');
   }
 
   Response _patchServer(Request req) {

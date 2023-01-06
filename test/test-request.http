@@ -1,8 +1,10 @@
 POST http://192.168.255.13:8080/users
-
 content-type: application/json
+
 {
-    "telegramId": 212,
+    "telegramId": "212",
     "username": "lysmi"
 }
+###
+GET  http://192.168.255.13:8080/users
 
