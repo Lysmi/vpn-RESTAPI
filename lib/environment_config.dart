@@ -7,5 +7,5 @@ class EnvironmentConfig {
 
   static const String password = 'postgres';
 
-  static const num port = 5433;
+  static const num port = 5432;
 }
