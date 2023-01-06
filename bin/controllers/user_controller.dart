@@ -4,6 +4,9 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shelf/shelf.dart';
 
+import '../domain/entities/sertificate.dart';
+import '../domain/entities/user.dart';
+import '../domain/usecases/add_user_usecase.dart';
 import '../domain/usecases/get_user_usecase.dart';
 import 'controller_interface.dart';
 
@@ -24,14 +27,21 @@ class UserController extends IController {
 
   Future<Response> _getUserByIdHandler(Request req, String userId) async {
     final getUserUsecase = GetIt.I<GetUserUsecase>();
-    var user = await getUserUsecase
-        .getUserById("60d6084f-c827-404b-b50a-249ff5d0b572");
+    var user = await getUserUsecase.getUserById(userId);
     return Response.ok(JsonMapper.serialize(user));
   }
 
-  Response _postAddUserHandler(Request req) {
+  // postData = {
+  //   'telegramId': 212,
+  //   'username': 'lysmi',
+  // }
+  Future<Response> _postAddUserHandler(Request req) async {
     //TODO implement
-    return Response.ok('Hello, World!\n');
+    final addUserUsecase = GetIt.I<AddUserUsecase>();
+    var postData = jsonDecode(await req.readAsString());
+    var sertificate =
+        await addUserUsecase.addUsers(User(telegramId: postData['telegramId']));
+    return Response.ok(jsonEncode(JsonMapper.serialize(sertificate)));
   }
 
   Response _patchAddUserBalanceHandler(

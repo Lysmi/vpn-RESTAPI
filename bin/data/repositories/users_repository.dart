@@ -15,4 +15,9 @@ class UserRepository extends IUsersRepository {
   Future<User?> getUserById(String id) {
     return _dataProvider.getUserById(id);
   }
+
+  @override
+  void addUser(User user) {
+    return _dataProvider.addUser(user);
+  }
 }
