@@ -39,6 +39,7 @@ class UserController extends IController {
     //TODO implement
     final addUserUsecase = GetIt.I<AddUserUsecase>();
     var body = await req.readAsString();
+    print(body);
     var postData = jsonDecode(body);
     var sertificate =
         await addUserUsecase.addUsers(User(telegramId: postData['telegramId']));
