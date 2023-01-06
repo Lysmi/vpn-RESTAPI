@@ -13,8 +13,11 @@ import 'controllers/server_controller.dart';
 import 'controllers/user_controller.dart';
 import 'data/providers/data_provider_interface.dart';
 import 'data/providers/postgresql/postgresql_data_provider.dart';
+import 'data/repositories/servers_repository.dart';
 import 'data/repositories/users_repository.dart';
+import 'domain/repositories/servers_repository_interface.dart';
 import 'domain/repositories/users_repository_interface.dart';
+import 'domain/usecases/add_user_usecase.dart';
 import 'domain/usecases/get_user_usecase.dart';
 import 'gateway.mapper.g.dart' show initializeJsonMapper;
 
@@ -31,10 +34,12 @@ void getItRegister() {
   GetIt.I.registerSingleton<Database>(db);
   GetIt.I.registerSingleton<IDataProvider>(PostgresqlDataProvider());
   GetIt.I.registerSingleton<IUsersRepository>(UserRepository());
+  GetIt.I.registerSingleton<IServerRepository>(ServerRepository());
 }
 
 void usecasesRegister() {
   GetIt.I.registerSingleton<GetUserUsecase>(GetUserUsecase());
+  GetIt.I.registerSingleton<AddUserUsecase>(AddUserUsecase());
 }
 
 void main(List<String> args) async {
