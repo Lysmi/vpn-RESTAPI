@@ -1,0 +1,210 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 15.1
+-- Dumped by pg_dump version 15.1
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: payment_acts_view; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.payment_acts_view (
+    id uuid NOT NULL,
+    user_id uuid NOT NULL,
+    sum integer NOT NULL,
+    date date NOT NULL
+);
+
+
+ALTER TABLE public.payment_acts_view OWNER TO postgres;
+
+--
+-- Name: regions_view; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.regions_view (
+    id uuid NOT NULL,
+    region_name character varying NOT NULL
+);
+
+
+ALTER TABLE public.regions_view OWNER TO postgres;
+
+--
+-- Name: sertificates_view; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.sertificates_view (
+    id uuid NOT NULL,
+    private_key text NOT NULL,
+    public_key text NOT NULL,
+    server_id uuid NOT NULL,
+    date_create date NOT NULL
+);
+
+
+ALTER TABLE public.sertificates_view OWNER TO postgres;
+
+--
+-- Name: servers_view; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.servers_view (
+    id uuid NOT NULL,
+    ip character varying NOT NULL,
+    server_name character varying NOT NULL,
+    count_users integer DEFAULT 0 NOT NULL,
+    region_id uuid NOT NULL
+);
+
+
+ALTER TABLE public.servers_view OWNER TO postgres;
+
+--
+-- Name: users_view; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users_view (
+    telegram_id text NOT NULL,
+    username text,
+    current_sertificate_id uuid,
+    balance integer DEFAULT 0 NOT NULL,
+    free_period_used boolean DEFAULT false NOT NULL,
+    id uuid NOT NULL
+);
+
+
+ALTER TABLE public.users_view OWNER TO postgres;
+
+--
+-- Data for Name: payment_acts_view; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.payment_acts_view (id, user_id, sum, date) FROM stdin;
+\.
+
+
+--
+-- Data for Name: regions_view; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.regions_view (id, region_name) FROM stdin;
+\.
+
+
+--
+-- Data for Name: sertificates_view; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.sertificates_view (id, private_key, public_key, server_id, date_create) FROM stdin;
+\.
+
+
+--
+-- Data for Name: servers_view; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.servers_view (id, ip, server_name, count_users, region_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: users_view; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.users_view (telegram_id, username, current_sertificate_id, balance, free_period_used, id) FROM stdin;
+user    user    \N      0       f       60d6084f-c827-404b-b50a-249ff5d0b572
+\.
+
+
+--
+-- Name: payment_acts_view payment_act_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.payment_acts_view
+    ADD CONSTRAINT payment_act_pk PRIMARY KEY (id);
+
+
+--
+-- Name: regions_view region_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.regions_view
+    ADD CONSTRAINT region_pk PRIMARY KEY (id);
+
+
+--
+-- Name: sertificates_view sertificate_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.sertificates_view
+    ADD CONSTRAINT sertificate_pk PRIMARY KEY (id);
+
+
+--
+-- Name: servers_view server_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.servers_view
+    ADD CONSTRAINT server_pk PRIMARY KEY (id);
+
+
+--
+-- Name: users_view user_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users_view
+    ADD CONSTRAINT user_pk PRIMARY KEY (id);
+
+
+--
+-- Name: payment_acts_view payment_act_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.payment_acts_view
+    ADD CONSTRAINT payment_act_fk FOREIGN KEY (user_id) REFERENCES public.users_view(id);
+
+
+--
+-- Name: sertificates_view sertificate_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.sertificates_view
+    ADD CONSTRAINT sertificate_fk FOREIGN KEY (server_id) REFERENCES public.servers_view(id);
+
+
+--
+-- Name: servers_view server_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.servers_view
+    ADD CONSTRAINT server_fk FOREIGN KEY (region_id) REFERENCES public.regions_view(id);
+
+
+--
+-- Name: users_view user_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users_view
+    ADD CONSTRAINT user_fk FOREIGN KEY (current_sertificate_id) REFERENCES public.sertificates_view(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
