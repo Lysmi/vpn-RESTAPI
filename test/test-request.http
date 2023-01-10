@@ -1,4 +1,4 @@
-POST http://192.168.255.13:8080/users
+POST http://localhost:8080/users
 content-type: application/json
 
 {
@@ -6,8 +6,17 @@ content-type: application/json
     "username": "lysmi"
 }
 ###
-GET  http://192.168.255.13:8080/users
+GET  http://localhost:8080/users
 
 ###
-GET http://192.168.255.13:8080/servers
+GET http://localhost:8080/servers
+###
+POST http://localhost:8080/servers
+content-type: application/json
 
+{
+    "ip": "0.0.0.0",
+    "serverName": "lysmiServer"
+}
+  //   "serverName": "lysmiServer",
+###

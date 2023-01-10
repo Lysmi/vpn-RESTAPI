@@ -7,7 +7,7 @@ import '../../domain/repositories/users_repository_interface.dart';
 import '../providers/data_provider_interface.dart';
 
 class ServerRepository extends IServerRepository {
-  final IDataProvider _dataProvider = GetIt.I<IDataProvider>();
+  final DataProvider _dataProvider = GetIt.I<DataProvider>();
 
   @override
   void addServer(Server server) {

@@ -5,7 +5,7 @@ import '../../domain/repositories/users_repository_interface.dart';
 import '../providers/data_provider_interface.dart';
 
 class UserRepository extends IUsersRepository {
-  final IDataProvider _dataProvider = GetIt.I<IDataProvider>();
+  final DataProvider _dataProvider = GetIt.I<DataProvider>();
   @override
   Future<List<User>> getAllUsers() {
     return _dataProvider.getAllUsers();

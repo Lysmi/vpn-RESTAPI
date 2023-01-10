@@ -8,7 +8,7 @@ import 'models/sertificate_model.schema.g.dart';
 import 'models/user_model.dart';
 import 'models/server_model.dart';
 
-class PostgresqlDataProvider extends IDataProvider {
+class Postgresql extends DataProvider {
   final db = GetIt.I<Database>();
   @override
   Future<List<User>> getAllUsers() async {
@@ -47,5 +47,10 @@ class PostgresqlDataProvider extends IDataProvider {
     return (await db.serverModels.queryServerModels())
         .map((e) => e.toEntity())
         .toList();
+  }
+
+  @override
+  void registration() {
+    // TODO: implement registration
   }
 }
