@@ -1,19 +1,42 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
 import '../../domain/entities/sertificate.dart';
 import '../../domain/entities/server.dart';
 import 'wireguard_server_interface.dart';
 
 class WireguardServer implements IWireguardServer {
-  late String ip;
-  String port = '8080';
+  String port = '8383';
+  Server server;
 
-  WireguardServer(Server server) {
-    ip = server.ip;
-  }
+  WireguardServer(this.server);
 
   @override
-  Future<Sertificate> addNewPeer() {
-    // TODO: implement addNewPeer
-    throw UnimplementedError();
+  Future<Sertificate> addNewPeer() async {
+    var responce = await http.get(
+        Uri.http('${server.ip}:$port', '/v1/devices/wg0/peers/'),
+        headers: {"Authorization": "Bearer capybara"});
+    var peersIPs = (jsonDecode(responce.body) as List<dynamic>)
+        .map((e) => e['allowed_ips'][0].split('/')[0].split('.')[3])
+        .toList();
+    var newIp = List.generate(255, ((index) => (index + 1)))
+        .where((element) => !peersIPs.contains(element.toString()))
+        .first;
+    responce = await http.post(
+        Uri.http('${server.ip}:$port', '/v1/devices/wg0/peers/'),
+        headers: {
+          "Authorization": "Bearer capybara",
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({
+          "allowed_ips": ["10.10.1.$newIp/32"]
+        }));
+    var newPeer = jsonDecode(responce.body);
+    return Sertificate(
+        publicKey: newPeer["url_safe_public_key"],
+        server: server,
+        dateCreate: DateTime.now());
   }
 
   @override

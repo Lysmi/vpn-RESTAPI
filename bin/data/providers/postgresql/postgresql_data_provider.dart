@@ -53,4 +53,10 @@ class Postgresql extends DataProvider {
   void registration() {
     // TODO: implement registration
   }
+
+  @override
+  User updateUser(User user) {
+    // TODO: implement updateUser
+    throw UnimplementedError();
+  }
 }

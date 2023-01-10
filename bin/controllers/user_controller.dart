@@ -8,6 +8,7 @@ import '../domain/entities/sertificate.dart';
 import '../domain/entities/user.dart';
 import '../domain/usecases/add_user_usecase.dart';
 import '../domain/usecases/get_user_usecase.dart';
+import '../domain/usecases/user_balance_usecase.dart';
 import 'controller_interface.dart';
 
 class UserController extends IController {
@@ -20,7 +21,7 @@ class UserController extends IController {
       ..get("/users", _getAllUsers)
       ..post("/users", _postAddUserHandler)
       ..patch(
-          "/user/<userId>/addToBalance/<balance>", _patchAddUserBalanceHandler)
+          "/users/<userId>/addToBalance/<balance>", _patchAddUserBalanceHandler)
       ..patch("/users", _patchUpdateUser);
     return this;
   }
@@ -28,6 +29,9 @@ class UserController extends IController {
   Future<Response> _getUserByIdHandler(Request req, String userId) async {
     final getUserUsecase = GetIt.I<GetUserUsecase>();
     var user = await getUserUsecase.getUserById(userId);
+    if (user == null) {
+      return Response.notFound(jsonEncode({"error": "User don`t exist"}));
+    }
     return Response.ok(JsonMapper.serialize(user));
   }
 
@@ -40,15 +44,24 @@ class UserController extends IController {
     final addUserUsecase = GetIt.I<AddUserUsecase>();
     var body = await req.readAsString();
     var postData = jsonDecode(body);
-    var sertificate =
+    var userId =
         await addUserUsecase.addUsers(User(telegramId: postData['telegramId']));
-    return Response.ok(jsonEncode(JsonMapper.serialize(sertificate)));
+    return Response.ok(jsonEncode({"userId": userId}));
   }
 
-  Response _patchAddUserBalanceHandler(
-      Request req, String userId, int balance) {
-    //TODO implement
-    return Response.ok('Hello, World!\n');
+  Future<Response> _patchAddUserBalanceHandler(
+      Request req, String userId, String _balance) async {
+    final balanceUsecase = UserBalanceUsecase();
+    var balance = int.tryParse(_balance);
+    if (balance == null) {
+      return Response.badRequest(
+          body: jsonEncode({"error": "balance must be integer"}));
+    }
+    var res = await balanceUsecase.addBalanceToUser(balance, userId);
+    if (res == null) {
+      return Response.notFound("User didn`t found");
+    }
+    return Response.ok(jsonEncode({"newBalance": res}));
   }
 
   Future<Response> _getAllUsers(Request req) async {
@@ -59,6 +72,6 @@ class UserController extends IController {
 
   Response _patchUpdateUser(Request req, int id) {
     //TODO implement
-    return Response.ok('Hello, World!\n');
+    return Response.ok('Unimplement\n');
   }
 }

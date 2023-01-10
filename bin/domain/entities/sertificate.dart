@@ -9,14 +9,12 @@ import 'server.dart';
 @jsonSerializable
 class Sertificate {
   String id;
-  String privateKey;
   String publicKey;
   Server server;
   DateTime dateCreate;
 
   Sertificate({
     id,
-    required this.privateKey,
     required this.publicKey,
     required this.server,
     required this.dateCreate,
@@ -31,7 +29,6 @@ class Sertificate {
   }) {
     return Sertificate(
       id: id ?? this.id,
-      privateKey: privateKey ?? this.privateKey,
       publicKey: publicKey ?? this.publicKey,
       server: server ?? this.server,
       dateCreate: dateCreate ?? this.dateCreate,
@@ -41,7 +38,6 @@ class Sertificate {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'privateKey': privateKey,
       'publicKey': publicKey,
       'server': server.toMap(),
       'dateCreate': dateCreate.millisecondsSinceEpoch,
@@ -51,7 +47,6 @@ class Sertificate {
   factory Sertificate.fromMap(Map<String, dynamic> map) {
     return Sertificate(
       id: map['id'] as String,
-      privateKey: map['privateKey'] as String,
       publicKey: map['publicKey'] as String,
       server: Server.fromMap(map['server'] as Map<String, dynamic>),
       dateCreate: DateTime.fromMillisecondsSinceEpoch(map['dateCreate'] as int),
@@ -65,7 +60,7 @@ class Sertificate {
 
   @override
   String toString() {
-    return 'Sertificate(id: $id, privateKey: $privateKey, publicKey: $publicKey, server: $server, dateCreate: $dateCreate)';
+    return 'Sertificate(id: $id, publicKey: $publicKey, server: $server, dateCreate: $dateCreate)';
   }
 
   @override
@@ -73,7 +68,6 @@ class Sertificate {
     if (identical(this, other)) return true;
 
     return other.id == id &&
-        other.privateKey == privateKey &&
         other.publicKey == publicKey &&
         other.server == server &&
         other.dateCreate == dateCreate;
@@ -82,7 +76,6 @@ class Sertificate {
   @override
   int get hashCode {
     return id.hashCode ^
-        privateKey.hashCode ^
         publicKey.hashCode ^
         server.hashCode ^
         dateCreate.hashCode;

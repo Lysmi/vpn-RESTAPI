@@ -20,4 +20,13 @@ class UserRepository extends IUsersRepository {
   void addUser(User user) {
     return _dataProvider.addUser(user);
   }
+
+  @override
+  Future<User?> updateUser(User user) async {
+    if ((await _dataProvider.getUserById(user.id)) != null) {
+      return _dataProvider.updateUser(user);
+    } else {
+      return null;
+    }
+  }
 }

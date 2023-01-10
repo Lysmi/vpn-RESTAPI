@@ -9,7 +9,6 @@ abstract class SertificateModel {
   @PrimaryKey()
   String get id;
 
-  String get privateKey;
   String get publicKey;
   ServerModel get server;
   DateTime get dateCreate;
@@ -20,7 +19,6 @@ extension ToEntity on SertificateModel {
   Sertificate toEntity() => Sertificate(
         id: id,
         dateCreate: dateCreate,
-        privateKey: privateKey,
         publicKey: publicKey,
         server: server.toEntity(),
       );

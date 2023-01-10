@@ -7,5 +7,6 @@ abstract class DataProvider {
   void addUser(User user);
   Future<List<Server>> getAllServers();
   void addServer(Server server);
+  User updateUser(User user);
   void registration();
 }

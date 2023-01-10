@@ -48,9 +48,14 @@ class FirebaseDataProvider implements DataProvider {
   }
 
   @override
-  Future<Entity.User?> getUserById(String id) {
-    // TODO: implement getUserById
-    throw UnimplementedError();
+  Future<Entity.User?> getUserById(String id) async {
+    var ref = db!.reference().child("Users/$id");
+    var users = await ref.get();
+    if (users == null) {
+      return null;
+    } else {
+      return Entity.User.fromMap(users);
+    }
   }
 
   @override
@@ -65,5 +70,12 @@ class FirebaseDataProvider implements DataProvider {
 
     app = await Firebase.initializeApp(options: options);
     db = FirebaseDatabase(app: app, databaseURL: 'mem://user.database/');
+  }
+
+  @override
+  Entity.User updateUser(Entity.User user) {
+    var ref = db!.reference().child("Users");
+    ref.update({user.id: user.toMap()});
+    return user;
   }
 }

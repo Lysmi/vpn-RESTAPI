@@ -9,14 +9,31 @@ content-type: application/json
 GET  http://localhost:8080/users
 
 ###
+GET http://localhost:8080/users/5f7e219e-7245-46fb-b483-e9328d082eb6
+###
+PATCH  http://localhost:8080/users/d831334b-81ac-41d9-b313-968aaba1e7a4/addToBalance/55
+###
 GET http://localhost:8080/servers
 ###
 POST http://localhost:8080/servers
 content-type: application/json
 
 {
-    "ip": "0.0.0.0",
+    "ip": "139.59.130.218",
     "serverName": "lysmiServer"
 }
   //   "serverName": "lysmiServer",
 ###
+
+GET http://139.59.130.218:8383/v1/devices/wg0/peers/
+Content-Type: application/json
+Authorization: Bearer capybara
+###
+
+POST http://139.59.130.218:8383/v1/devices/wg0/peers/
+Content-Type: application/json
+Authorization: Bearer capybara
+
+{
+    "allowed_ips": ["10.10.1.1/32"]
+}

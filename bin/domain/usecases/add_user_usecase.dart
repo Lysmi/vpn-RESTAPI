@@ -12,7 +12,7 @@ class AddUserUsecase {
   IUsersRepository users = GetIt.I<IUsersRepository>();
   IServerRepository servers = GetIt.I<IServerRepository>();
 
-  Future<Sertificate?> addUsers(User user) async {
+  Future<String> addUsers(User user) async {
     //add user sertificate to the server
     var wireguardServer = WireguardServer(await _balanceServer());
     user.currentCertificate = await wireguardServer.addNewPeer();
@@ -20,12 +20,16 @@ class AddUserUsecase {
     //add user to database
     users.addUser(user);
 
-    return user.currentCertificate;
+    return user.id;
   }
 
   Future<Server> _balanceServer() async {
     var serversList = (await servers.getAllServers());
     serversList.sort(((a, b) => a.countUsers.compareTo(b.countUsers)));
-    return serversList.first;
+    if (serversList.isEmpty) {
+      throw Exception("EmptyServerList");
+    } else {
+      return serversList.first;
+    }
   }
 }

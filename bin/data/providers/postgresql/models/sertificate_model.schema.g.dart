@@ -50,9 +50,9 @@ class _SertificateModelRepository extends BaseRepository
     if (requests.isEmpty) return;
 
     await db.query(
-      'INSERT INTO "sertificates" ( "id", "private_key", "public_key", "server_id", "date_create", "user_id" )\n'
-      'VALUES ${requests.map((r) => '( ${registry.encode(r.id)}, ${registry.encode(r.privateKey)}, ${registry.encode(r.publicKey)}, ${registry.encode(r.serverId)}, ${registry.encode(r.dateCreate)}, ${registry.encode(r.userId)} )').join(', ')}\n'
-      'ON CONFLICT ( "id" ) DO UPDATE SET "private_key" = EXCLUDED."private_key", "public_key" = EXCLUDED."public_key", "server_id" = EXCLUDED."server_id", "date_create" = EXCLUDED."date_create", "user_id" = EXCLUDED."user_id"',
+      'INSERT INTO "sertificates" ( "id", "public_key", "server_id", "date_create", "user_id" )\n'
+      'VALUES ${requests.map((r) => '( ${registry.encode(r.id)}, ${registry.encode(r.publicKey)}, ${registry.encode(r.serverId)}, ${registry.encode(r.dateCreate)}, ${registry.encode(r.userId)} )').join(', ')}\n'
+      'ON CONFLICT ( "id" ) DO UPDATE SET "public_key" = EXCLUDED."public_key", "server_id" = EXCLUDED."server_id", "date_create" = EXCLUDED."date_create", "user_id" = EXCLUDED."user_id"',
     );
   }
 
@@ -61,9 +61,9 @@ class _SertificateModelRepository extends BaseRepository
     if (requests.isEmpty) return;
     await db.query(
       'UPDATE "sertificates"\n'
-      'SET "private_key" = COALESCE(UPDATED."private_key"::text, "sertificates"."private_key"), "public_key" = COALESCE(UPDATED."public_key"::text, "sertificates"."public_key"), "server_id" = COALESCE(UPDATED."server_id"::text, "sertificates"."server_id"), "date_create" = COALESCE(UPDATED."date_create"::timestamp, "sertificates"."date_create"), "user_id" = COALESCE(UPDATED."user_id"::text, "sertificates"."user_id")\n'
-      'FROM ( VALUES ${requests.map((r) => '( ${registry.encode(r.id)}, ${registry.encode(r.privateKey)}, ${registry.encode(r.publicKey)}, ${registry.encode(r.serverId)}, ${registry.encode(r.dateCreate)}, ${registry.encode(r.userId)} )').join(', ')} )\n'
-      'AS UPDATED("id", "private_key", "public_key", "server_id", "date_create", "user_id")\n'
+      'SET "public_key" = COALESCE(UPDATED."public_key"::text, "sertificates"."public_key"), "server_id" = COALESCE(UPDATED."server_id"::text, "sertificates"."server_id"), "date_create" = COALESCE(UPDATED."date_create"::timestamp, "sertificates"."date_create"), "user_id" = COALESCE(UPDATED."user_id"::text, "sertificates"."user_id")\n'
+      'FROM ( VALUES ${requests.map((r) => '( ${registry.encode(r.id)}, ${registry.encode(r.publicKey)}, ${registry.encode(r.serverId)}, ${registry.encode(r.dateCreate)}, ${registry.encode(r.userId)} )').join(', ')} )\n'
+      'AS UPDATED("id", "public_key", "server_id", "date_create", "user_id")\n'
       'WHERE "sertificates"."id" = UPDATED."id"',
     );
   }
@@ -270,13 +270,11 @@ class _RegionModelRepository extends BaseRepository
 class SertificateModelInsertRequest {
   SertificateModelInsertRequest(
       {required this.id,
-      required this.privateKey,
       required this.publicKey,
       required this.serverId,
       required this.dateCreate,
       required this.userId});
   String id;
-  String privateKey;
   String publicKey;
   String serverId;
   DateTime dateCreate;
@@ -316,10 +314,8 @@ class RegionModelInsertRequest {
 }
 
 class SertificateModelUpdateRequest {
-  SertificateModelUpdateRequest(
-      {required this.id, this.privateKey, this.publicKey, this.serverId, this.dateCreate, this.userId});
+  SertificateModelUpdateRequest({required this.id, this.publicKey, this.serverId, this.dateCreate, this.userId});
   String id;
-  String? privateKey;
   String? publicKey;
   String? serverId;
   DateTime? dateCreate;
@@ -368,7 +364,6 @@ class SertificateModelQueryable extends KeyedViewQueryable<SertificateModel, Str
   @override
   SertificateModel decode(TypedMap map) => SertificateModelView(
       id: map.get('id', registry.decode),
-      privateKey: map.get('private_key', registry.decode),
       publicKey: map.get('public_key', registry.decode),
       server: map.get('server', ServerModelQueryable().decoder),
       dateCreate: map.get('date_create', registry.decode),
@@ -377,17 +372,10 @@ class SertificateModelQueryable extends KeyedViewQueryable<SertificateModel, Str
 
 class SertificateModelView implements SertificateModel {
   SertificateModelView(
-      {required this.id,
-      required this.privateKey,
-      required this.publicKey,
-      required this.server,
-      required this.dateCreate,
-      required this.user});
+      {required this.id, required this.publicKey, required this.server, required this.dateCreate, required this.user});
 
   @override
   final String id;
-  @override
-  final String privateKey;
   @override
   final String publicKey;
   @override
