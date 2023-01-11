@@ -18,11 +18,10 @@ class UserController extends IController {
   UserController addHandlers() {
     router
       ..get("/users/<userId>", _getUserById)
-      ..get("/users/byTelegramId/<userId>", _getUserByTelegramId)
       ..get("/users", _getAllUsers)
       ..get("/users/<userId>/qrCode", _getUserQR)
       ..patch("/users/<userId>/useFreePeriod", _patchUseFreePeriod)
-      ..post("/users", _postAddUserHandler)
+      ..post("/users", _postAddUser)
       ..patch("/users/<userId>/addToBalance/<balance>", _patchAddUserBalance)
       ..patch("/users", _patchUpdateUser);
     return this;
@@ -31,16 +30,6 @@ class UserController extends IController {
   Future<Response> _getUserById(Request req, String userId) async {
     final getUserUsecase = GetIt.I<GetUserUsecase>();
     var user = await getUserUsecase.getUserById(userId);
-    if (user == null) {
-      return Response.badRequest(
-          body: jsonEncode({"error": "User don`t exist"}));
-    }
-    return Response.ok(JsonMapper.serialize(user));
-  }
-
-  Future<Response> _getUserByTelegramId(Request req, String userId) async {
-    final getUserUsecase = GetIt.I<GetUserUsecase>();
-    var user = await getUserUsecase.getUserByTelegramId(userId);
     if (user == null) {
       return Response.badRequest(
           body: jsonEncode({"error": "User don`t exist"}));
@@ -85,12 +74,12 @@ class UserController extends IController {
   //   'telegramId': 212,
   //   'username': 'lysmi',
   // }
-  Future<Response> _postAddUserHandler(Request req) async {
+  Future<Response> _postAddUser(Request req) async {
     final addUserUsecase = GetIt.I<AddUserUsecase>();
     var body = await req.readAsString();
     var postData = jsonDecode(body);
-    var userId = await addUserUsecase.addUsers(User(
-        telegramId: postData['telegramId'], username: postData['username']));
+    var userId = await addUserUsecase.addUsers(
+        User(id: postData['telegramId'], username: postData['username']));
     return Response.ok(jsonEncode({"userId": userId}));
   }
 

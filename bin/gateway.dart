@@ -13,7 +13,6 @@ import 'controllers/server_controller.dart';
 import 'controllers/user_controller.dart';
 import 'data/providers/data_provider_interface.dart';
 import 'data/providers/firebase/firebase_data_provider.dart';
-import 'data/providers/postgresql/postgresql_data_provider.dart';
 import 'data/repositories/servers_repository.dart';
 import 'data/repositories/users_repository.dart';
 import 'domain/repositories/servers_repository_interface.dart';

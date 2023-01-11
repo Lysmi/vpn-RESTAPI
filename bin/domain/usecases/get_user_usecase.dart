@@ -16,10 +16,6 @@ class GetUserUsecase {
     return userRep.getUserById(id);
   }
 
-  Future<User?> getUserByTelegramId(String telegramId) {
-    return userRep.getUserByTelegramId(telegramId);
-  }
-
   Future<Uint8List?> getUserQR(String id) async {
     var userSertificate = (await userRep.getUserById(id))?.currentCertificate;
     if (userSertificate == null) {
