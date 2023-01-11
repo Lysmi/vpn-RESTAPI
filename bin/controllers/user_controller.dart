@@ -19,6 +19,8 @@ class UserController extends IController {
     router
       ..get("/users/<userId>", _getUserByIdHandler)
       ..get("/users", _getAllUsers)
+      ..get("/users/<userId>/qrCode", _getUserQR)
+      ..patch("/users/<userId>/useFreePeriod", _patchUseFreePeriod)
       ..post("/users", _postAddUserHandler)
       ..patch(
           "/users/<userId>/addToBalance/<balance>", _patchAddUserBalanceHandler)
@@ -35,17 +37,44 @@ class UserController extends IController {
     return Response.ok(JsonMapper.serialize(user));
   }
 
+  Future<Response> _getUserQR(Request req, String userId) async {
+    //TODO implement
+    final getUserUsecase = GetIt.I<GetUserUsecase>();
+    return Response.ok(
+      await getUserUsecase.getUserQR(userId),
+      headers: {
+        'Content-Type': 'image/png',
+      },
+    );
+  }
+
+  Future<Response> _patchUseFreePeriod(Request req, String userId) async {
+    final balanceUsecase = UserBalanceUsecase();
+    var res = await balanceUsecase.useFreePeriod(userId);
+    switch (res) {
+      case null:
+        return Response.notFound(jsonEncode({"error": "User don`t exist"}));
+      case -1:
+        return Response.badRequest(
+            body: jsonEncode({"error": "Free Period already used"}));
+      default:
+        return Response.ok(jsonEncode({
+          "message": "Free Period used",
+          "newBalance": res,
+        }));
+    }
+  }
+
   // postData = {
   //   'telegramId': 212,
   //   'username': 'lysmi',
   // }
   Future<Response> _postAddUserHandler(Request req) async {
-    //TODO implement
     final addUserUsecase = GetIt.I<AddUserUsecase>();
     var body = await req.readAsString();
     var postData = jsonDecode(body);
-    var userId =
-        await addUserUsecase.addUsers(User(telegramId: postData['telegramId']));
+    var userId = await addUserUsecase.addUsers(User(
+        telegramId: postData['telegramId'], username: postData['username']));
     return Response.ok(jsonEncode({"userId": userId}));
   }
 
@@ -55,7 +84,7 @@ class UserController extends IController {
     var balance = int.tryParse(_balance);
     if (balance == null) {
       return Response.badRequest(
-          body: jsonEncode({"error": "balance must be integer"}));
+          body: jsonEncode({"error": "Balance must be integer"}));
     }
     var res = await balanceUsecase.addBalanceToUser(balance, userId);
     if (res == null) {

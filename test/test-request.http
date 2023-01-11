@@ -7,11 +7,14 @@ content-type: application/json
 }
 ###
 GET  http://localhost:8080/users
-
 ###
-GET http://localhost:8080/users/5f7e219e-7245-46fb-b483-e9328d082eb6
+GET http://localhost:8080/users/9945f805-b8aa-4d1d-a6d6-6fc2e68058d3
+###
+GET http://localhost:8080/users/772c7c27-564a-40f4-94f8-8179f536089d/qrCode
 ###
 PATCH  http://localhost:8080/users/d831334b-81ac-41d9-b313-968aaba1e7a4/addToBalance/55
+###
+PATCH  http://localhost:8080/users/9945f805-b8aa-4d1d-a6d6-6fc2e68058d3/useFreePeriod
 ###
 GET http://localhost:8080/servers
 ###
@@ -25,7 +28,7 @@ content-type: application/json
   //   "serverName": "lysmiServer",
 ###
 
-GET http://139.59.130.218:8383/v1/devices/wg0/peers/
+GET http://139.59.130.218:8383/v1/devices/wg0/peers/ZX-G9X9oxyj3uw4PaTAZHd0R0n5taPKP3LzwH44SRW4=/quick.conf.png
 Content-Type: application/json
 Authorization: Bearer capybara
 ###

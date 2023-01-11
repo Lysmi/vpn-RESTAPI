@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 
@@ -51,8 +52,12 @@ class WireguardServer implements IWireguardServer {
   }
 
   @override
-  Future<String> getQRConfig(String urlSafePublicKey) {
+  Future<Uint8List> getQRConfig(String urlSafePublicKey) async {
     // TODO: implement getQRConfig
-    throw UnimplementedError();
+    var res = await http.get(
+        Uri.http('${server.ip}:$port',
+            '/v1/devices/wg0/peers/$urlSafePublicKey/quick.conf.png'),
+        headers: {"Authorization": "Bearer capybara"});
+    return res.bodyBytes;
   }
 }
