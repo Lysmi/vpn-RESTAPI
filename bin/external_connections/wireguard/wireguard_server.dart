@@ -31,7 +31,7 @@ class WireguardServer implements IWireguardServer {
           "Content-Type": "application/json",
         },
         body: jsonEncode({
-          "allowed_ips": ["10.10.1.$newIp/32"]
+          "allowed_ips": ["10.13.37.$newIp/32"]
         }));
     var newPeer = jsonDecode(responce.body);
     return Sertificate(
