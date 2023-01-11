@@ -6,7 +6,9 @@ content-type: application/json
     "username": "lysmi"
 }
 ###
-GET  http://localhost:8080/users
+GET  http://192.168.255.13:8080/users
+###
+GET  http://localhost:8080/users/byTelegramId/212
 ###
 GET http://localhost:8080/users/9945f805-b8aa-4d1d-a6d6-6fc2e68058d3
 ###
@@ -17,6 +19,15 @@ PATCH  http://localhost:8080/users/d831334b-81ac-41d9-b313-968aaba1e7a4/addToBal
 PATCH  http://localhost:8080/users/9945f805-b8aa-4d1d-a6d6-6fc2e68058d3/useFreePeriod
 ###
 GET http://localhost:8080/servers
+###
+POST http://192.168.255.13:8080/servers
+content-type: application/json
+
+{
+    "ip": "139.59.130.218",
+    "serverName": "lysmiServer"
+}
+  //   "serverName": "lysmiServer",
 ###
 POST http://localhost:8080/servers
 content-type: application/json

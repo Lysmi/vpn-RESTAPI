@@ -29,4 +29,15 @@ class UserRepository extends IUsersRepository {
       return null;
     }
   }
+
+  @override
+  Future<User?> getUserByTelegramId(String telegramId) async {
+    List<User> users = await _dataProvider.getAllUsers();
+    var usersWithThisTId =
+        users.where((element) => element.telegramId == telegramId);
+    if (usersWithThisTId.isEmpty) {
+      return null;
+    }
+    return users.firstWhere((element) => element.telegramId == telegramId);
+  }
 }

@@ -16,12 +16,16 @@ class GetUserUsecase {
     return userRep.getUserById(id);
   }
 
+  Future<User?> getUserByTelegramId(String telegramId) {
+    return userRep.getUserByTelegramId(telegramId);
+  }
+
   Future<Uint8List?> getUserQR(String id) async {
-    var user = await userRep.getUserById(id);
-    if (user == null) {
+    var userSertificate = (await userRep.getUserById(id))?.currentCertificate;
+    if (userSertificate == null) {
       return null;
     }
-    return WireguardServer(user.currentCertificate!.server)
-        .getQRConfig(user.currentCertificate!.publicKey);
+    return WireguardServer(userSertificate.server)
+        .getQRConfig(userSertificate.publicKey);
   }
 }

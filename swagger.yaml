@@ -11,16 +11,31 @@ paths:
     get:
       description: Returns user by id from the system 
       parameters:
-        - name: limit
+        - name: userId
           in: query
-          description: Limits the number of items on a page
+          description: UUID of user
           schema:
-            type: integer
-        - name: offset
+            type: String
+      tags:
+        - user
+      responses:
+        '200':
+          description: A user model.
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Bad request
+  /users/<userId>/qrCode:
+    get:
+      description: Returns QR code for user with this id 
+      parameters:
+        - name: userId
           in: query
-          description: Specifies the page number of the artists to be displayed
+          description: UUID of user
           schema:
-            type: integer
+            type: String
       tags:
         - user
       responses:

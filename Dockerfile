@@ -5,8 +5,6 @@ FROM dart:stable AS build
 WORKDIR /app
 COPY pubspec.* ./
 RUN dart pub get
-RUN dart pub global activate environment_config
-#RUN dart pub run environment_config:generate --config-extension=production
 RUN dart pub run build_runner build
 
 

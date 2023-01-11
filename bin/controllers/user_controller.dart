@@ -17,31 +17,46 @@ class UserController extends IController {
   @override
   UserController addHandlers() {
     router
-      ..get("/users/<userId>", _getUserByIdHandler)
+      ..get("/users/<userId>", _getUserById)
+      ..get("/users/byTelegramId/<userId>", _getUserByTelegramId)
       ..get("/users", _getAllUsers)
       ..get("/users/<userId>/qrCode", _getUserQR)
       ..patch("/users/<userId>/useFreePeriod", _patchUseFreePeriod)
       ..post("/users", _postAddUserHandler)
-      ..patch(
-          "/users/<userId>/addToBalance/<balance>", _patchAddUserBalanceHandler)
+      ..patch("/users/<userId>/addToBalance/<balance>", _patchAddUserBalance)
       ..patch("/users", _patchUpdateUser);
     return this;
   }
 
-  Future<Response> _getUserByIdHandler(Request req, String userId) async {
+  Future<Response> _getUserById(Request req, String userId) async {
     final getUserUsecase = GetIt.I<GetUserUsecase>();
     var user = await getUserUsecase.getUserById(userId);
     if (user == null) {
-      return Response.notFound(jsonEncode({"error": "User don`t exist"}));
+      return Response.badRequest(
+          body: jsonEncode({"error": "User don`t exist"}));
+    }
+    return Response.ok(JsonMapper.serialize(user));
+  }
+
+  Future<Response> _getUserByTelegramId(Request req, String userId) async {
+    final getUserUsecase = GetIt.I<GetUserUsecase>();
+    var user = await getUserUsecase.getUserByTelegramId(userId);
+    if (user == null) {
+      return Response.badRequest(
+          body: jsonEncode({"error": "User don`t exist"}));
     }
     return Response.ok(JsonMapper.serialize(user));
   }
 
   Future<Response> _getUserQR(Request req, String userId) async {
-    //TODO implement
     final getUserUsecase = GetIt.I<GetUserUsecase>();
+    var qr = await getUserUsecase.getUserQR(userId);
+    if (qr == null) {
+      return Response.badRequest(
+          body: jsonEncode({"error": "User don`t exist"}));
+    }
     return Response.ok(
-      await getUserUsecase.getUserQR(userId),
+      qr,
       headers: {
         'Content-Type': 'image/png',
       },
@@ -53,7 +68,8 @@ class UserController extends IController {
     var res = await balanceUsecase.useFreePeriod(userId);
     switch (res) {
       case null:
-        return Response.notFound(jsonEncode({"error": "User don`t exist"}));
+        return Response.badRequest(
+            body: jsonEncode({"error": "User don`t exist"}));
       case -1:
         return Response.badRequest(
             body: jsonEncode({"error": "Free Period already used"}));
@@ -78,7 +94,7 @@ class UserController extends IController {
     return Response.ok(jsonEncode({"userId": userId}));
   }
 
-  Future<Response> _patchAddUserBalanceHandler(
+  Future<Response> _patchAddUserBalance(
       Request req, String userId, String _balance) async {
     final balanceUsecase = UserBalanceUsecase();
     var balance = int.tryParse(_balance);
@@ -88,7 +104,7 @@ class UserController extends IController {
     }
     var res = await balanceUsecase.addBalanceToUser(balance, userId);
     if (res == null) {
-      return Response.notFound("User didn`t found");
+      return Response.badRequest(body: "User didn`t found");
     }
     return Response.ok(jsonEncode({"newBalance": res}));
   }

@@ -16,7 +16,7 @@ class ConfigController extends IController {
 
   Response _getSwaggerYaml(Request req) {
     final file = File("swagger.yaml");
-    
+
     return Response.ok(file.readAsBytesSync(), headers: {
       HttpHeaders.lastModifiedHeader: formatHttpDate(file.statSync().modified),
       HttpHeaders.acceptRangesHeader: 'bytes',
