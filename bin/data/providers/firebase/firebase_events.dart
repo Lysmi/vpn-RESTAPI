@@ -10,7 +10,8 @@ class FirebaseEvents implements EventsProvider {
   @override
   void addBalanceNotifyReceiver(entities.BalanceNotifyReceiver receiver) {
     var ref = db!.reference().child("Events/BalanceNotify/${receiver.user.id}");
-    ref.update(receiver.toMap());
+    ref = ref.push();
+    ref.set(receiver.toMap());
   }
 
   @override
