@@ -15,8 +15,8 @@ class EventController extends IController {
   EventController addHandlers() {
     router
       ..post('/subscribeOn', _subscribeOn)
-      ..get('/notifySubscribers/<userId>', _notifySubscribers);
-      ..get('/testSubscribe', _testSubscribe);
+      ..get('/notifySubscribers/<userId>', _notifySubscribers)
+      ..post('/testSubscribe', _testSubscribe);
     return this;
   }
 
