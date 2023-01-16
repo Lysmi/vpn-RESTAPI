@@ -1,11 +1,11 @@
 import 'package:firebase_dart/firebase_dart.dart';
 import 'package:firebase_dart/implementation/testing.dart';
+import 'package:get_it/get_it.dart';
 import '../../../domain/entities/user.dart' as Entity;
 import '../../../domain/entities/server.dart' as Entity;
 import '../data_provider.dart';
 
 class FirebaseData implements DataProvider {
-  FirebaseApp? app;
   FirebaseDatabase? db;
   @override
   void addServer(Entity.Server server) {
@@ -60,16 +60,7 @@ class FirebaseData implements DataProvider {
 
   @override
   void registration() async {
-    await FirebaseTesting.setup();
-    var options = FirebaseOptions(
-        appId: '1:567779820391:web:2471a31bdfa94ecfdd65c2',
-        apiKey: 'AIzaSyBGyJHCcS-OyhdlgldtH0evXey321WJlN8',
-        projectId: 'vpnrest-cbdd5',
-        messagingSenderId: 'ignore',
-        authDomain: 'vpnrest-cbdd5.firebaseapp.com');
-
-    app = await Firebase.initializeApp(options: options);
-    db = FirebaseDatabase(app: app, databaseURL: 'mem://user.database/');
+    db = GetIt.I<FirebaseDatabase>();
   }
 
   @override

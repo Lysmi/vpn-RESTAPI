@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:firebase_dart/core.dart';
+import 'package:firebase_dart/database.dart';
+import 'package:firebase_dart/implementation/testing.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
@@ -38,12 +41,27 @@ void getItRegister() {
     password: EnvironmentConfig.password,
     useSSL: false,
   );
+  registrationFirebase();
   GetIt.I.registerSingleton<Database>(db);
   GetIt.I.registerSingleton<DataProvider>(FirebaseData()..registration());
   GetIt.I.registerSingleton<EventsProvider>(FirebaseEvents()..registration());
 
   repositoryRegister();
   usecasesRegister();
+}
+
+void registrationFirebase() async {
+  await FirebaseTesting.setup();
+  var options = FirebaseOptions(
+      appId: '1:567779820391:web:2471a31bdfa94ecfdd65c2',
+      apiKey: 'AIzaSyBGyJHCcS-OyhdlgldtH0evXey321WJlN8',
+      projectId: 'vpnrest-cbdd5',
+      messagingSenderId: 'ignore',
+      authDomain: 'vpnrest-cbdd5.firebaseapp.com');
+
+  var app = await Firebase.initializeApp(options: options);
+  var db = FirebaseDatabase(app: app, databaseURL: 'mem://user.database/');
+  GetIt.I.registerSingleton<FirebaseDatabase>(db);
 }
 
 void repositoryRegister() {

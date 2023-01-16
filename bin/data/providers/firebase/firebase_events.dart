@@ -1,11 +1,11 @@
 import 'package:firebase_dart/firebase_dart.dart';
 import 'package:firebase_dart/implementation/testing.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../../domain/entities/events/balanceNotifyReceiver.dart' as entities;
 import '../events_provider.dart';
 
 class FirebaseEvents implements EventsProvider {
-  FirebaseApp? app;
   FirebaseDatabase? db;
   @override
   void addBalanceNotifyReceiver(entities.BalanceNotifyReceiver receiver) {
@@ -47,15 +47,6 @@ class FirebaseEvents implements EventsProvider {
 
   @override
   void registration() async {
-    await FirebaseTesting.setup();
-    var options = FirebaseOptions(
-        appId: '1:567779820391:web:2471a31bdfa94ecfdd65c2',
-        apiKey: 'AIzaSyBGyJHCcS-OyhdlgldtH0evXey321WJlN8',
-        projectId: 'vpnrest-cbdd5',
-        messagingSenderId: 'ignore',
-        authDomain: 'vpnrest-cbdd5.firebaseapp.com');
-
-    app = await Firebase.initializeApp(options: options);
-    db = FirebaseDatabase(app: app, databaseURL: 'mem://user.database/');
+    db = GetIt.I<FirebaseDatabase>();
   }
 }
