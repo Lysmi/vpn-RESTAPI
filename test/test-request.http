@@ -13,6 +13,7 @@ content-type: application/json
     "userId": "212",
     "ip": "http://localhost:8080/testSubscribe"
 }
+
 ###
 POST http://localhost:8080/users
 content-type: application/json
@@ -23,6 +24,9 @@ content-type: application/json
 }
 ###
 GET  http://192.168.255.13:8080/users
+
+###
+GET  http://192.168.255.13:8080/notifySubscribers/212
 ###
 GET  http://localhost:8080/users
 ###
