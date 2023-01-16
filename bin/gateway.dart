@@ -40,7 +40,7 @@ void getItRegister() {
   );
   GetIt.I.registerSingleton<Database>(db);
   GetIt.I.registerSingleton<DataProvider>(FirebaseData()..registration());
-  GetIt.I.registerSingleton<EventsProvider>(FirebaseEvents());
+  GetIt.I.registerSingleton<EventsProvider>(FirebaseEvents()..registration());
 
   repositoryRegister();
   usecasesRegister();
