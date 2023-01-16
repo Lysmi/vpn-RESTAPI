@@ -32,7 +32,7 @@ import 'domain/usecases/user_balance_usecase.dart';
 import 'gateway.mapper.g.dart' show initializeJsonMapper;
 
 //register all get_it models
-void getItRegister() {
+Future<void> getItRegister() async {
   var db = Database(
     host: EnvironmentConfig.host,
     port: EnvironmentConfig.port.toInt(),
@@ -41,7 +41,7 @@ void getItRegister() {
     password: EnvironmentConfig.password,
     useSSL: false,
   );
-  registrationFirebase();
+  await registrationFirebase();
   GetIt.I.registerSingleton<Database>(db);
   GetIt.I.registerSingleton<DataProvider>(FirebaseData()..registration());
   GetIt.I.registerSingleton<EventsProvider>(FirebaseEvents()..registration());
@@ -50,7 +50,7 @@ void getItRegister() {
   usecasesRegister();
 }
 
-void registrationFirebase() async {
+Future<void> registrationFirebase() async {
   await FirebaseTesting.setup();
   var options = FirebaseOptions(
       appId: '1:567779820391:web:2471a31bdfa94ecfdd65c2',
@@ -82,7 +82,7 @@ void main(List<String> args) async {
   initializeJsonMapper();
 
   // Use any available host or container IP (usually `0.0.0.0`).
-  getItRegister();
+  await getItRegister();
   final ip = InternetAddress.anyIPv4;
   final swaggerPath = 'swagger.yaml';
 
