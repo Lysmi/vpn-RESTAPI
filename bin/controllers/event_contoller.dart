@@ -28,7 +28,7 @@ class EventController extends IController {
     final eventsUsecases = GetIt.I<EventsUsecases>();
     var body = await req.readAsString();
     var postData = jsonDecode(body);
-
+    print("subscribers data: $postData");
     eventsUsecases.addBalanceNotifyReceiver(postData["ip"], postData["userId"]);
 
     return Response.ok('Subscribed');
@@ -36,6 +36,7 @@ class EventController extends IController {
 
   Future<Response> _notifySubscribers(Request req, String id) async {
     final eventsUsecases = GetIt.I<EventsUsecases>();
+    print("start notify");
     eventsUsecases.notifySubscribers(id);
     return Response.ok('Notified');
   }
