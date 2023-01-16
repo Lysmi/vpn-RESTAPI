@@ -8,6 +8,7 @@ import 'package:shelf_swagger_ui/shelf_swagger_ui.dart';
 import 'package:stormberry/stormberry.dart';
 import 'package:vpn_rest_server/environment_config.dart';
 import 'controllers/config_controller.dart';
+import 'controllers/event_contoller.dart';
 import 'controllers/server_controller.dart';
 import 'controllers/user_controller.dart';
 import 'data/providers/data_provider.dart';
@@ -72,6 +73,7 @@ void main(List<String> args) async {
   ConfigController(router: router).addHandlers();
   UserController(router: router).addHandlers();
   ServerController(router: router).addHandlers();
+  EventController(router: router).addHandlers();
 
   final swaggerHandler = SwaggerUI(swaggerPath, title: 'Swagger Test');
   router.get("/swagger", swaggerHandler.call);

@@ -6,6 +6,14 @@ content-type: application/json
     "username": "lysmi"
 }
 ###
+POST http://192.168.255.13:8080/subscribeOn
+content-type: application/json
+
+{
+    "userId": "212",
+    "ip": "http://localhost:8080/testSubscribe"
+}
+###
 POST http://localhost:8080/users
 content-type: application/json
 
