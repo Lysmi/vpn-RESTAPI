@@ -4,7 +4,7 @@ import '../../domain/entities/server.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/servers_repository_interface.dart';
 import '../../domain/repositories/users_repository_interface.dart';
-import '../providers/data_provider_interface.dart';
+import '../providers/data_provider.dart';
 
 class ServerRepository extends IServerRepository {
   final DataProvider _dataProvider = GetIt.I<DataProvider>();

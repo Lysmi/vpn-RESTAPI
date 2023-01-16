@@ -7,19 +7,22 @@ import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf_swagger_ui/shelf_swagger_ui.dart';
 import 'package:stormberry/stormberry.dart';
 import 'package:vpn_rest_server/environment_config.dart';
-
 import 'controllers/config_controller.dart';
 import 'controllers/server_controller.dart';
 import 'controllers/user_controller.dart';
-import 'data/providers/data_provider_interface.dart';
-import 'data/providers/firebase/firebase_data_provider.dart';
+import 'data/providers/data_provider.dart';
+import 'data/providers/firebase/firebase_data.dart';
+import 'data/repositories/events_repository.dart';
 import 'data/repositories/servers_repository.dart';
 import 'data/repositories/users_repository.dart';
+import 'domain/repositories/events_repository_interface.dart';
 import 'domain/repositories/servers_repository_interface.dart';
 import 'domain/repositories/users_repository_interface.dart';
 import 'domain/usecases/add_user_usecase.dart';
+import 'domain/usecases/events_usecases.dart';
 import 'domain/usecases/get_user_usecase.dart';
 import 'domain/usecases/server_usecase.dart';
+import 'domain/usecases/user_balance_usecase.dart';
 import 'gateway.mapper.g.dart' show initializeJsonMapper;
 
 //register all get_it models
@@ -33,17 +36,23 @@ void getItRegister() {
     useSSL: false,
   );
   GetIt.I.registerSingleton<Database>(db);
-  GetIt.I
-      .registerSingleton<DataProvider>(FirebaseDataProvider()..registration());
+  GetIt.I.registerSingleton<DataProvider>(FirebaseData()..registration());
+  repositoryRegister();
+  usecasesRegister();
+}
 
+void repositoryRegister() {
   GetIt.I.registerSingleton<IUsersRepository>(UserRepository());
   GetIt.I.registerSingleton<IServerRepository>(ServerRepository());
+  GetIt.I.registerSingleton<IEventsRepository>(EventsRepository());
 }
 
 void usecasesRegister() {
   GetIt.I.registerSingleton<GetUserUsecase>(GetUserUsecase());
   GetIt.I.registerSingleton<AddUserUsecase>(AddUserUsecase());
   GetIt.I.registerSingleton<ServerUsecase>(ServerUsecase());
+  GetIt.I.registerSingleton<EventsUsecases>(EventsUsecases());
+  GetIt.I.registerSingleton<UserBalanceUsecase>(UserBalanceUsecase());
 }
 
 void main(List<String> args) async {
@@ -51,7 +60,6 @@ void main(List<String> args) async {
 
   // Use any available host or container IP (usually `0.0.0.0`).
   getItRegister();
-  usecasesRegister();
   final ip = InternetAddress.anyIPv4;
   final swaggerPath = 'swagger.yaml';
 

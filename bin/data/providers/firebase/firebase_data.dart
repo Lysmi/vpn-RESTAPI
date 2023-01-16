@@ -2,9 +2,9 @@ import 'package:firebase_dart/firebase_dart.dart';
 import 'package:firebase_dart/implementation/testing.dart';
 import '../../../domain/entities/user.dart' as Entity;
 import '../../../domain/entities/server.dart' as Entity;
-import '../data_provider_interface.dart';
+import '../data_provider.dart';
 
-class FirebaseDataProvider implements DataProvider {
+class FirebaseData implements DataProvider {
   FirebaseApp? app;
   FirebaseDatabase? db;
   @override
