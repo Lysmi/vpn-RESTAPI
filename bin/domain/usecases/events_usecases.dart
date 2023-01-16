@@ -27,8 +27,9 @@ class EventsUsecases {
   }
 
   void notifySubscribers(String id) async {
-    (await events.getBalanceNotifyReceiversByUserId(id)).forEach((element) {
+    for (var element in (await events.getBalanceNotifyReceiversByUserId(id))) {
+      print("notify`s ip: ${element.ip}");
       element.sendOut();
-    });
+    }
   }
 }
