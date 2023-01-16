@@ -60,7 +60,10 @@ Future<void> registrationFirebase() async {
       authDomain: 'vpnrest-cbdd5.firebaseapp.com');
 
   var app = await Firebase.initializeApp(options: options);
-  var db = FirebaseDatabase(app: app, databaseURL: 'mem://user.database/');
+  var db = FirebaseDatabase(
+      app: app,
+      databaseURL:
+          'https://vpnrest-cbdd5-default-rtdb.europe-west1.firebasedatabase.app/');
   GetIt.I.registerSingleton<FirebaseDatabase>(db);
 }
 
