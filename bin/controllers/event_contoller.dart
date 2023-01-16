@@ -16,6 +16,7 @@ class EventController extends IController {
     router
       ..post('/subscribeOn', _subscribeOn)
       ..get('/notifySubscribers/<userId>', _notifySubscribers);
+      ..get('/testSubscribe', _testSubscribe);
     return this;
   }
 
@@ -36,6 +37,13 @@ class EventController extends IController {
   Future<Response> _notifySubscribers(Request req, String id) async {
     final eventsUsecases = GetIt.I<EventsUsecases>();
     eventsUsecases.notifySubscribers(id);
+    return Response.ok('Notified');
+  }
+
+  Future<Response> _testSubscribe(Request req) async {
+    var body = await req.readAsString();
+    var postData = jsonDecode(body);
+    print(postData);
     return Response.ok('Notified');
   }
 }
