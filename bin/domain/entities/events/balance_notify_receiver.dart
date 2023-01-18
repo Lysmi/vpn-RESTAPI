@@ -1,7 +1,7 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, unused_import
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
+import 'dart:collection';
 import 'package:http/http.dart' as http;
 
 import '../user.dart' as entities;

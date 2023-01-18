@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dart_json_mapper/dart_json_mapper.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shelf/shelf.dart';
 
 import '../domain/entities/region.dart';

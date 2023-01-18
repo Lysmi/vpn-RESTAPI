@@ -5,77 +5,76 @@ import 'package:collection/collection.dart';
 
 class PeerDTO {
   String publicKey;
-  String url_safe_public_key;
-  String preshared_key;
-  List<String> allowed_ips;
-  String last_handshake_time;
-  String persistent_keepalive_interval;
+  String urlSafePublicKey;
+  String presharedKey;
+  List<String> allowedIps;
+  String lastHandshakeTime;
+  String persistentKeepaliveInterval;
   String endpoint;
-  int receive_bytes;
-  int transmit_bytes;
+  int receiveBytes;
+  int transmitBytes;
   PeerDTO({
     required this.publicKey,
-    required this.url_safe_public_key,
-    required this.preshared_key,
-    required this.allowed_ips,
-    required this.last_handshake_time,
-    required this.persistent_keepalive_interval,
+    required this.urlSafePublicKey,
+    required this.presharedKey,
+    required this.allowedIps,
+    required this.lastHandshakeTime,
+    required this.persistentKeepaliveInterval,
     required this.endpoint,
-    required this.receive_bytes,
-    required this.transmit_bytes,
+    required this.receiveBytes,
+    required this.transmitBytes,
   });
 
   PeerDTO copyWith({
     String? publicKey,
-    String? url_safe_public_key,
-    String? preshared_key,
-    List<String>? allowed_ips,
-    String? last_handshake_time,
-    String? persistent_keepalive_interval,
+    String? urlSafePublicKey,
+    String? presharedKey,
+    List<String>? allowedIps,
+    String? lastHandshakeTime,
+    String? persistentKeepaliveInterval,
     String? endpoint,
-    int? receive_bytes,
-    int? transmit_bytes,
+    int? receiveBytes,
+    int? transmitBytes,
   }) {
     return PeerDTO(
       publicKey: publicKey ?? this.publicKey,
-      url_safe_public_key: url_safe_public_key ?? this.url_safe_public_key,
-      preshared_key: preshared_key ?? this.preshared_key,
-      allowed_ips: allowed_ips ?? this.allowed_ips,
-      last_handshake_time: last_handshake_time ?? this.last_handshake_time,
-      persistent_keepalive_interval:
-          persistent_keepalive_interval ?? this.persistent_keepalive_interval,
+      urlSafePublicKey: urlSafePublicKey ?? this.urlSafePublicKey,
+      presharedKey: presharedKey ?? this.presharedKey,
+      allowedIps: allowedIps ?? this.allowedIps,
+      lastHandshakeTime: lastHandshakeTime ?? this.lastHandshakeTime,
+      persistentKeepaliveInterval:
+          persistentKeepaliveInterval ?? this.persistentKeepaliveInterval,
       endpoint: endpoint ?? this.endpoint,
-      receive_bytes: receive_bytes ?? this.receive_bytes,
-      transmit_bytes: transmit_bytes ?? this.transmit_bytes,
+      receiveBytes: receiveBytes ?? this.receiveBytes,
+      transmitBytes: transmitBytes ?? this.transmitBytes,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'publicKey': publicKey,
-      'url_safe_public_key': url_safe_public_key,
-      'preshared_key': preshared_key,
-      'allowed_ips': allowed_ips,
-      'last_handshake_time': last_handshake_time,
-      'persistent_keepalive_interval': persistent_keepalive_interval,
+      'urlSafePublicKey': urlSafePublicKey,
+      'presharedKey': presharedKey,
+      'allowedIps': allowedIps,
+      'lastHandshakeTime': lastHandshakeTime,
+      'persistentKeepaliveInterval': persistentKeepaliveInterval,
       'endpoint': endpoint,
-      'receive_bytes': receive_bytes,
-      'transmit_bytes': transmit_bytes,
+      'receiveBytes': receiveBytes,
+      'transmitBytes': transmitBytes,
     };
   }
 
   factory PeerDTO.fromMap(Map<String, dynamic> map) {
     return PeerDTO(
       publicKey: map['publicKey'] as String,
-      url_safe_public_key: map['url_safe_public_key'] as String,
-      preshared_key: map['preshared_key'] as String,
-      allowed_ips: List<String>.from((map['allowed_ips'] as List<String>)),
-      last_handshake_time: map['last_handshake_time'] as String,
-      persistent_keepalive_interval:
-          map['persistent_keepalive_interval'] as String,
+      urlSafePublicKey: map['urlSafePublicKey'] as String,
+      presharedKey: map['presharedKey'] as String,
+      allowedIps: List<String>.from((map['allowedIps'] as List<String>)),
+      lastHandshakeTime: map['lastHandshakeTime'] as String,
+      persistentKeepaliveInterval: map['persistentKeepaliveInterval'] as String,
       endpoint: map['endpoint'] as String,
-      receive_bytes: map['receive_bytes'] as int,
-      transmit_bytes: map['transmit_bytes'] as int,
+      receiveBytes: map['receiveBytes'] as int,
+      transmitBytes: map['transmitBytes'] as int,
     );
   }
 
@@ -86,7 +85,7 @@ class PeerDTO {
 
   @override
   String toString() {
-    return 'PeerDTO(publicKey: $publicKey, url_safe_public_key: $url_safe_public_key, preshared_key: $preshared_key, allowed_ips: $allowed_ips, last_handshake_time: $last_handshake_time, persistent_keepalive_interval: $persistent_keepalive_interval, endpoint: $endpoint, receive_bytes: $receive_bytes, transmit_bytes: $transmit_bytes)';
+    return 'PeerDTO(publicKey: $publicKey, urlSafePublicKey: $urlSafePublicKey, presharedKey: $presharedKey, allowedIps: $allowedIps, lastHandshakeTime: $lastHandshakeTime, persistentKeepaliveInterval: $persistentKeepaliveInterval, endpoint: $endpoint, receiveBytes: $receiveBytes, transmitBytes: $transmitBytes)';
   }
 
   @override
@@ -95,26 +94,26 @@ class PeerDTO {
     final listEquals = const DeepCollectionEquality().equals;
 
     return other.publicKey == publicKey &&
-        other.url_safe_public_key == url_safe_public_key &&
-        other.preshared_key == preshared_key &&
-        listEquals(other.allowed_ips, allowed_ips) &&
-        other.last_handshake_time == last_handshake_time &&
-        other.persistent_keepalive_interval == persistent_keepalive_interval &&
+        other.urlSafePublicKey == urlSafePublicKey &&
+        other.presharedKey == presharedKey &&
+        listEquals(other.allowedIps, allowedIps) &&
+        other.lastHandshakeTime == lastHandshakeTime &&
+        other.persistentKeepaliveInterval == persistentKeepaliveInterval &&
         other.endpoint == endpoint &&
-        other.receive_bytes == receive_bytes &&
-        other.transmit_bytes == transmit_bytes;
+        other.receiveBytes == receiveBytes &&
+        other.transmitBytes == transmitBytes;
   }
 
   @override
   int get hashCode {
     return publicKey.hashCode ^
-        url_safe_public_key.hashCode ^
-        preshared_key.hashCode ^
-        allowed_ips.hashCode ^
-        last_handshake_time.hashCode ^
-        persistent_keepalive_interval.hashCode ^
+        urlSafePublicKey.hashCode ^
+        presharedKey.hashCode ^
+        allowedIps.hashCode ^
+        lastHandshakeTime.hashCode ^
+        persistentKeepaliveInterval.hashCode ^
         endpoint.hashCode ^
-        receive_bytes.hashCode ^
-        transmit_bytes.hashCode;
+        receiveBytes.hashCode ^
+        transmitBytes.hashCode;
   }
 }

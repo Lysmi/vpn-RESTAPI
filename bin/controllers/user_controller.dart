@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:dart_json_mapper/dart_json_mapper.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shelf/shelf.dart';
 
-import '../domain/entities/sertificate.dart';
 import '../domain/entities/user.dart';
 import '../domain/usecases/add_user_usecase.dart';
 import '../domain/usecases/get_user_usecase.dart';
@@ -94,8 +92,8 @@ class UserController extends IController {
   }
 
   Future<Response> _patchAddUserBalance(
-      Request req, String userId, String _balance) async {
-    var balance = int.tryParse(_balance);
+      Request req, String userId, String balanceString) async {
+    var balance = int.tryParse(balanceString);
     if (balance == null) {
       return Response.badRequest(
           body: jsonEncode({"error": "Balance must be integer"}));

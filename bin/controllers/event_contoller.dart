@@ -1,12 +1,9 @@
 import 'dart:convert';
 
-import 'package:get_it/get_it.dart';
 import 'package:shelf/shelf.dart';
 
 import '../domain/usecases/events_usecases.dart';
-import '../domain/usecases/server_usecase.dart';
 import 'controller_interface.dart';
-import '../domain/entities/events/balanceNotifyReceiver.dart' as entities;
 
 class EventController extends IController {
   EventController({required super.router});

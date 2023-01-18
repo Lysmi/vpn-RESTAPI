@@ -25,10 +25,6 @@ import 'data/repositories/users_repository.dart';
 import 'domain/repositories/events_repository_interface.dart';
 import 'domain/repositories/servers_repository_interface.dart';
 import 'domain/repositories/users_repository_interface.dart';
-import 'domain/usecases/add_user_usecase.dart';
-import 'domain/usecases/events_usecases.dart';
-import 'domain/usecases/get_user_usecase.dart';
-import 'domain/usecases/server_usecase.dart';
 import 'domain/usecases/user_balance_usecase.dart';
 import 'gateway.mapper.g.dart' show initializeJsonMapper;
 
@@ -73,6 +69,7 @@ void repositoryRegister() {
   GetIt.I.registerSingleton<IEventsRepository>(EventsRepository());
 }
 
+//TODO put in a separate file
 void dailyDecreaseBalanceRun() {
   final scheduler = NeatPeriodicTaskScheduler(
     interval: Duration(days: 1),

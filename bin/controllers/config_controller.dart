@@ -1,7 +1,7 @@
 ﻿import 'dart:io';
 
-import 'package:shelf/shelf.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:shelf/shelf.dart';
 
 import 'controller_interface.dart';
 
@@ -10,7 +10,7 @@ class ConfigController extends IController {
 
   @override
   ConfigController addHandlers() {
-    router..get('/swagger.yaml', _getSwaggerYaml);
+    router.get('/swagger.yaml', _getSwaggerYaml);
     return this;
   }
 
