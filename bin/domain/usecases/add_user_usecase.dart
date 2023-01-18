@@ -7,15 +7,15 @@ import '../entities/server.dart';
 import '../entities/user.dart';
 import '../repositories/servers_repository_interface.dart';
 import '../repositories/users_repository_interface.dart';
+import 'server_usecase.dart';
 
 class AddUserUsecase {
-  IUsersRepository users = GetIt.I<IUsersRepository>();
-  IServerRepository servers = GetIt.I<IServerRepository>();
+  static late IUsersRepository users = GetIt.I<IUsersRepository>();
+  static late IServerRepository servers = GetIt.I<IServerRepository>();
 
-  Future<String> addUsers(User user) async {
+  static Future<String> addUsers(User user) async {
     //add user sertificate to the server
-    var wireguardServer = WireguardServer(await _balanceServer());
-    user.currentCertificate = await wireguardServer.addNewPeer();
+    user = await generateNewSertificate(user);
 
     //add user to database
     users.addUser(user);
@@ -23,13 +23,9 @@ class AddUserUsecase {
     return user.id;
   }
 
-  Future<Server> _balanceServer() async {
-    var serversList = (await servers.getAllServers());
-    serversList.sort(((a, b) => a.countUsers.compareTo(b.countUsers)));
-    if (serversList.isEmpty) {
-      throw Exception("EmptyServerList");
-    } else {
-      return serversList.first;
-    }
+  static Future<User> generateNewSertificate(User user) async {
+    var wireguardServer = WireguardServer(await ServerUsecase.balanceServer());
+    user.currentCertificate = await wireguardServer.addNewPeer();
+    return user;
   }
 }

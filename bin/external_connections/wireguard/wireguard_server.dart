@@ -42,7 +42,10 @@ class WireguardServer implements IWireguardServer {
 
   @override
   void deletePeer(String urlSafePublicKey) {
-    // TODO: implement deletePeer
+    http.delete(
+        Uri.http(
+            '${server.ip}:$port', '/v1/devices/wg0/peers/$urlSafePublicKey/'),
+        headers: {"Authorization": "Bearer capybara"});
   }
 
   @override

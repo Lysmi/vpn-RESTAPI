@@ -23,8 +23,7 @@ class ServerController extends IController {
   }
 
   Future<Response> _getAllServers(Request req) async {
-    final serverUsecase = GetIt.I<ServerUsecase>();
-    var servers = await serverUsecase.getServers();
+    var servers = await ServerUsecase.getServers();
     return Response.ok(JsonMapper.serialize(servers));
   }
 
@@ -33,11 +32,10 @@ class ServerController extends IController {
   //   "serverName": "lysmiServer",
   // }
   Future<Response> _postAddServer(Request req) async {
-    final serverUsecase = GetIt.I<ServerUsecase>();
     var body = await req.readAsString();
     var postData = jsonDecode(body);
 
-    serverUsecase.addServer(entity.Server(
+    ServerUsecase.addServer(entity.Server(
         ip: postData["ip"],
         serverName: postData["serverName"],
         countUsers: 0,

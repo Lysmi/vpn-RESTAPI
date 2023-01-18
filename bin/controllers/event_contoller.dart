@@ -25,11 +25,10 @@ class EventController extends IController {
   //   "userId": "727272",
   // }
   Future<Response> _subscribeOn(Request req) async {
-    final eventsUsecases = GetIt.I<EventsUsecases>();
     var body = await req.readAsString();
     var postData = jsonDecode(body);
     print("subscribers data: $postData");
-    eventsUsecases.addBalanceNotifyReceiver(
+    EventsUsecases.addBalanceNotifyReceiver(
       userId: postData["userId"],
       ip: postData["ip"],
     );
@@ -37,9 +36,8 @@ class EventController extends IController {
   }
 
   Future<Response> _notifySubscribers(Request req, String id) async {
-    final eventsUsecases = GetIt.I<EventsUsecases>();
     print("start notify");
-    eventsUsecases.notifySubscribers(id);
+    EventsUsecases.notifySubscribers(id);
     return Response.ok('Notified');
   }
 

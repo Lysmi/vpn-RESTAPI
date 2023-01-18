@@ -48,7 +48,6 @@ Future<void> getItRegister() async {
   GetIt.I.registerSingleton<EventsProvider>(FirebaseEvents()..registration());
 
   repositoryRegister();
-  usecasesRegister();
 }
 
 Future<void> registrationFirebase() async {
@@ -74,23 +73,13 @@ void repositoryRegister() {
   GetIt.I.registerSingleton<IEventsRepository>(EventsRepository());
 }
 
-void usecasesRegister() {
-  GetIt.I.registerSingleton<GetUserUsecase>(GetUserUsecase());
-  GetIt.I.registerSingleton<AddUserUsecase>(AddUserUsecase());
-  GetIt.I.registerSingleton<ServerUsecase>(ServerUsecase());
-  GetIt.I.registerSingleton<EventsUsecases>(EventsUsecases());
-  GetIt.I.registerSingleton<UserBalanceUsecase>(UserBalanceUsecase());
-}
-
 void dailyDecreaseBalanceRun() {
   final scheduler = NeatPeriodicTaskScheduler(
     interval: Duration(days: 1),
     name: 'dailyDecreaseBalance',
     timeout: Duration(seconds: 5),
-    task: () async {
-      GetIt.I<UserBalanceUsecase>().addBalanceToAllUsers(-1);
-    },
-    minCycle: Duration(hours: 1),
+    task: () async => UserBalanceUsecase.dailyDeacreaseBalance(),
+    minCycle: Duration(hours: 2),
   );
   scheduler.start();
 }
@@ -119,5 +108,6 @@ void main(List<String> args) async {
   // For running in containers, we respect the PORT environment variable.
   final port = int.parse(Platform.environment['PORT'] ?? '8080');
   final server = await serve(handler, ip, port);
+  dailyDecreaseBalanceRun();
   print('Server listening on port ${server.port}');
 }

@@ -29,8 +29,7 @@ class UserController extends IController {
   }
 
   Future<Response> _getUserById(Request req, String userId) async {
-    final getUserUsecase = GetIt.I<GetUserUsecase>();
-    var user = await getUserUsecase.getUserById(userId);
+    var user = await GetUserUsecase.getUserById(userId);
     if (user == null) {
       return Response.badRequest(
           body: jsonEncode({"error": "User don`t exist"}));
@@ -39,11 +38,11 @@ class UserController extends IController {
   }
 
   Future<Response> _getUserQR(Request req, String userId) async {
-    final getUserUsecase = GetIt.I<GetUserUsecase>();
-    var qr = await getUserUsecase.getUserQR(userId);
+    var qr = await GetUserUsecase.getUserQR(userId);
     if (qr == null) {
       return Response.badRequest(
-          body: jsonEncode({"error": "User don`t exist"}));
+          body:
+              jsonEncode({"error": "User don`t exist or haven`t sertificate"}));
     }
     return Response.ok(
       qr,
@@ -54,11 +53,11 @@ class UserController extends IController {
   }
 
   Future<Response> _getUserConfig(Request req, String userId) async {
-    final getUserUsecase = GetIt.I<GetUserUsecase>();
-    var config = await getUserUsecase.getUserConfig(userId);
+    var config = await GetUserUsecase.getUserConfig(userId);
     if (config == null) {
       return Response.badRequest(
-          body: jsonEncode({"error": "User don`t exist"}));
+          body:
+              jsonEncode({"error": "User don`t exist or haven`t sertificate"}));
     }
     return Response.ok(jsonEncode({
       "configFile": config,
@@ -66,8 +65,7 @@ class UserController extends IController {
   }
 
   Future<Response> _patchUseFreePeriod(Request req, String userId) async {
-    final balanceUsecase = UserBalanceUsecase();
-    var res = await balanceUsecase.useFreePeriod(userId);
+    var res = await UserBalanceUsecase.useFreePeriod(userId);
     switch (res) {
       case null:
         return Response.badRequest(
@@ -88,23 +86,21 @@ class UserController extends IController {
   //   'username': 'lysmi',
   // }
   Future<Response> _postAddUser(Request req) async {
-    final addUserUsecase = GetIt.I<AddUserUsecase>();
     var body = await req.readAsString();
     var postData = jsonDecode(body);
-    var userId = await addUserUsecase.addUsers(
+    var userId = await AddUserUsecase.addUsers(
         User(id: postData['telegramId'], username: postData['username']));
     return Response.ok(jsonEncode({"userId": userId}));
   }
 
   Future<Response> _patchAddUserBalance(
       Request req, String userId, String _balance) async {
-    final balanceUsecase = UserBalanceUsecase();
     var balance = int.tryParse(_balance);
     if (balance == null) {
       return Response.badRequest(
           body: jsonEncode({"error": "Balance must be integer"}));
     }
-    var res = await balanceUsecase.addBalanceToUser(balance, userId);
+    var res = await UserBalanceUsecase.addBalanceToUser(balance, userId);
     if (res == null) {
       return Response.badRequest(body: "User didn`t found");
     }
@@ -112,8 +108,7 @@ class UserController extends IController {
   }
 
   Future<Response> _getAllUsers(Request req) async {
-    final getUserUsecase = GetIt.I<GetUserUsecase>();
-    var users = await getUserUsecase.getAllUsers();
+    var users = await GetUserUsecase.getAllUsers();
     return Response.ok(JsonMapper.serialize(users));
   }
 
