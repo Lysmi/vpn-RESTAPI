@@ -3,13 +3,14 @@ import 'package:firebase_dart/implementation/testing.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../domain/entities/events/balanceNotifyReceiver.dart' as entities;
+import '../../../domain/entities/events/balanceNotifyReceiver.dart';
 import '../events_provider.dart';
 
 class FirebaseEvents implements EventsProvider {
   FirebaseDatabase? db;
   @override
   void addBalanceNotifyReceiver(entities.BalanceNotifyReceiver receiver) {
-    var ref = db!.reference().child("Events/BalanceNotify");
+    var ref = db!.reference().child("Events/BalanceNotify/${receiver.user.id}");
     ref = ref.push();
     ref.set(receiver.toMap());
   }
@@ -24,8 +25,9 @@ class FirebaseEvents implements EventsProvider {
     } else {
       receivers as Map;
       receivers = receivers.values.toList();
-      receivers =
-          (receivers as List).map((e) => receivers.User.fromMap(e)).toList();
+      receivers = (receivers as List)
+          .map((e) => BalanceNotifyReceiver.fromMap(e))
+          .toList();
     }
     return (receivers as List<entities.BalanceNotifyReceiver>);
   }
@@ -40,8 +42,9 @@ class FirebaseEvents implements EventsProvider {
     } else {
       receivers as Map;
       receivers = receivers.values.toList();
-      receivers =
-          (receivers as List).map((e) => receivers.User.fromMap(e)).toList();
+      receivers = (receivers as List)
+          .map((e) => BalanceNotifyReceiver.fromMap(e))
+          .toList();
     }
     return (receivers as List<entities.BalanceNotifyReceiver>);
   }

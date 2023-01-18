@@ -20,6 +20,7 @@ class UserController extends IController {
       ..get("/users/<userId>", _getUserById)
       ..get("/users", _getAllUsers)
       ..get("/users/<userId>/qrCode", _getUserQR)
+      ..get("/users/<userId>/config", _getUserConfig)
       ..patch("/users/<userId>/useFreePeriod", _patchUseFreePeriod)
       ..post("/users", _postAddUser)
       ..patch("/users/<userId>/addToBalance/<balance>", _patchAddUserBalance)
@@ -50,6 +51,18 @@ class UserController extends IController {
         'Content-Type': 'image/png',
       },
     );
+  }
+
+  Future<Response> _getUserConfig(Request req, String userId) async {
+    final getUserUsecase = GetIt.I<GetUserUsecase>();
+    var config = await getUserUsecase.getUserConfig(userId);
+    if (config == null) {
+      return Response.badRequest(
+          body: jsonEncode({"error": "User don`t exist"}));
+    }
+    return Response.ok(jsonEncode({
+      "configFile": config,
+    }));
   }
 
   Future<Response> _patchUseFreePeriod(Request req, String userId) async {

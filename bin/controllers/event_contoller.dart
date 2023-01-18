@@ -29,8 +29,10 @@ class EventController extends IController {
     var body = await req.readAsString();
     var postData = jsonDecode(body);
     print("subscribers data: $postData");
-    eventsUsecases.addBalanceNotifyReceiver(postData["ip"], postData["userId"]);
-
+    eventsUsecases.addBalanceNotifyReceiver(
+      userId: postData["userId"],
+      ip: postData["ip"],
+    );
     return Response.ok('Subscribed');
   }
 

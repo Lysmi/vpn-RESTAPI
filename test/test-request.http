@@ -6,7 +6,7 @@ content-type: application/json
     "username": "lysmi"
 }
 ###
-POST http://192.168.255.13:8080/subscribeOn
+POST http://localhost:8080/subscribeOn
 content-type: application/json
 
 {
@@ -26,7 +26,9 @@ content-type: application/json
 GET  http://192.168.255.13:8080/users
 
 ###
-GET  http://192.168.255.13:8080/notifySubscribers/212
+GET  http://localhost:8080/notifySubscribers/212
+###
+GET  http://localhost:8080/users/212/config
 ###
 GET  http://localhost:8080/users
 ###

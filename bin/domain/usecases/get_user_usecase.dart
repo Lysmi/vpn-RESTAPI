@@ -24,4 +24,13 @@ class GetUserUsecase {
     return WireguardServer(userSertificate.server)
         .getQRConfig(userSertificate.publicKey);
   }
+
+  Future<String?> getUserConfig(String id) async {
+    var userSertificate = (await userRep.getUserById(id))?.currentCertificate;
+    if (userSertificate == null) {
+      return null;
+    }
+    return WireguardServer(userSertificate.server)
+        .getConfig(userSertificate.publicKey);
+  }
 }

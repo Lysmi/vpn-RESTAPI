@@ -17,13 +17,14 @@ class EventsUsecases {
     return events.getBalanceNotifyReceiversByUserId(id);
   }
 
-  void addBalanceNotifyReceiver(String userId, String ip) async {
+  void addBalanceNotifyReceiver(
+      {required String userId, required String ip}) async {
     GetUserUsecase userUsecase = GetIt.I<GetUserUsecase>();
     final user = await userUsecase.getUserById(userId);
     if (user != null) {
       events
           .addBalanceNotifyReceiver(BalanceNotifyReceiver(ip: ip, user: user));
-    }
+    } else {}
   }
 
   void notifySubscribers(String id) async {
