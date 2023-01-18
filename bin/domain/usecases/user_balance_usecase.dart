@@ -35,4 +35,15 @@ class UserBalanceUsecase {
     var res = await users.updateUser(newUser);
     return res?.balance;
   }
+
+  Future<void> addBalanceToAllUsers(int balance) async {
+    var newUsers = await users.getAllUsers();
+    for (var newUser in newUsers) {
+      newUser.balance += balance;
+      if (newUser.balance <= 0) {
+        newUser.balance = 0;
+        users.updateUser(newUser);
+      }
+    }
+  }
 }

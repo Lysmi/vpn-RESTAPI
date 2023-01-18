@@ -4,6 +4,7 @@ import 'package:firebase_dart/core.dart';
 import 'package:firebase_dart/database.dart';
 import 'package:firebase_dart/implementation/testing.dart';
 import 'package:get_it/get_it.dart';
+import 'package:neat_periodic_task/neat_periodic_task.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -79,6 +80,19 @@ void usecasesRegister() {
   GetIt.I.registerSingleton<ServerUsecase>(ServerUsecase());
   GetIt.I.registerSingleton<EventsUsecases>(EventsUsecases());
   GetIt.I.registerSingleton<UserBalanceUsecase>(UserBalanceUsecase());
+}
+
+void dailyDecreaseBalanceRun() {
+  final scheduler = NeatPeriodicTaskScheduler(
+    interval: Duration(days: 1),
+    name: 'dailyDecreaseBalance',
+    timeout: Duration(seconds: 5),
+    task: () async {
+      GetIt.I<UserBalanceUsecase>().addBalanceToAllUsers(-1);
+    },
+    minCycle: Duration(hours: 1),
+  );
+  scheduler.start();
 }
 
 void main(List<String> args) async {
