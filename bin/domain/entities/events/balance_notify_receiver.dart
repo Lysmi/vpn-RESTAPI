@@ -19,7 +19,7 @@ class BalanceNotifyReceiver implements Event {
   @override
   Future<void> sendOut() async {
     http.post(Uri.parse(ip),
-        body: jsonEncode({"Event": "balanceNotify", "User": user.toJson()}));
+        body: jsonEncode({"Event": "balanceNotify", "User": user.toMap()}));
   }
 
   BalanceNotifyReceiver copyWith({
