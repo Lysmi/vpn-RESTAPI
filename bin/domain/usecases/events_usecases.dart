@@ -1,11 +1,11 @@
 import 'package:get_it/get_it.dart';
 
-import '../../data/repositories/events_repository.dart';
-import '../entities/events/balanceNotifyReceiver.dart';
+import '../entities/events/balance_notify_receiver.dart';
 import '../repositories/events_repository_interface.dart';
 import 'get_user_usecase.dart';
 
 class EventsUsecases {
+  // ignore: unnecessary_late
   static late IEventsRepository events = GetIt.I<IEventsRepository>();
 
   static Future<List<BalanceNotifyReceiver>> getAllBalanceNotifyReceivers() {

@@ -1,9 +1,8 @@
 import 'package:firebase_dart/firebase_dart.dart';
-import 'package:firebase_dart/implementation/testing.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../domain/entities/events/balanceNotifyReceiver.dart' as entities;
-import '../../../domain/entities/events/balanceNotifyReceiver.dart';
+import '../../../domain/entities/events/balance_notify_receiver.dart' as entities;
+import '../../../domain/entities/events/balance_notify_receiver.dart';
 import '../events_provider.dart';
 
 class FirebaseEvents implements EventsProvider {

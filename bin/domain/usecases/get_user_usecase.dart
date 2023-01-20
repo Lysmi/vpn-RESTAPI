@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_late
+
 import 'dart:typed_data';
 
 import 'package:get_it/get_it.dart';

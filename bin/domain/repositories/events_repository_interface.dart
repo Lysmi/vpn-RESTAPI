@@ -1,4 +1,4 @@
-import '../entities/events/balanceNotifyReceiver.dart' as entities;
+import '../entities/events/balance_notify_receiver.dart' as entities;
 
 abstract class IEventsRepository {
   Future<List<entities.BalanceNotifyReceiver>> getAllBalanceNotifyReceivers();

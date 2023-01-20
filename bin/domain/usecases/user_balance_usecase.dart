@@ -1,10 +1,11 @@
+// ignore_for_file: unnecessary_late
+
 import 'package:get_it/get_it.dart';
 
 import '../../external_connections/wireguard/wireguard_server.dart';
 import '../entities/user.dart';
 import '../repositories/users_repository_interface.dart';
 import 'add_user_usecase.dart';
-import 'server_usecase.dart';
 
 class UserBalanceUsecase {
   static late IUsersRepository usersRep = GetIt.I<IUsersRepository>();
@@ -17,8 +18,8 @@ class UserBalanceUsecase {
     newUser.balance += balance;
     if (newUser.balance <= 0) {
       newUser.balance = 0;
-      newUser = await _generateNewSerificateWithBalanceCheck(newUser);
     }
+    newUser = await _generateNewSerificateWithBalanceCheck(newUser);
     var res = await usersRep.updateUser(newUser);
     return res?.balance;
   }
@@ -36,6 +37,7 @@ class UserBalanceUsecase {
     if (newUser.balance <= 0) {
       newUser.balance = 0;
     }
+    newUser = await _generateNewSerificateWithBalanceCheck(newUser);
     var res = await usersRep.updateUser(newUser);
     return res?.balance;
   }
@@ -46,8 +48,9 @@ class UserBalanceUsecase {
       newUser.balance += balance;
       if (newUser.balance <= 0) {
         newUser.balance = 0;
-        newUser = await _generateNewSerificateWithBalanceCheck(newUser);
       }
+      newUser = await _generateNewSerificateWithBalanceCheck(newUser);
+
       usersRep.updateUser(newUser);
     }
   }

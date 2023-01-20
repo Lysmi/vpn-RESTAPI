@@ -1,26 +1,25 @@
 import 'package:firebase_dart/firebase_dart.dart';
-import 'package:firebase_dart/implementation/testing.dart';
 import 'package:get_it/get_it.dart';
-import '../../../domain/entities/user.dart' as Entity;
-import '../../../domain/entities/server.dart' as Entity;
+import '../../../domain/entities/user.dart' as entity;
+import '../../../domain/entities/server.dart' as entity;
 import '../data_provider.dart';
 
 class FirebaseData implements DataProvider {
   FirebaseDatabase? db;
   @override
-  void addServer(Entity.Server server) {
+  void addServer(entity.Server server) {
     var ref = db!.reference().child("Servers");
     ref.update({server.id: server.toMap()});
   }
 
   @override
-  void addUser(Entity.User user) {
+  void addUser(entity.User user) {
     var ref = db!.reference().child("Users");
     ref.update({user.id: user.toMap()});
   }
 
   @override
-  Future<List<Entity.Server>> getAllServers() async {
+  Future<List<entity.Server>> getAllServers() async {
     var ref = db!.reference().child("Servers");
     var servers = await ref.get();
     if (servers == null) {
@@ -28,13 +27,13 @@ class FirebaseData implements DataProvider {
     } else {
       servers as Map;
       servers = servers.values.toList();
-      servers = (servers as List).map((e) => Entity.Server.fromMap(e)).toList();
+      servers = (servers as List).map((e) => entity.Server.fromMap(e)).toList();
     }
-    return (servers as List<Entity.Server>);
+    return (servers as List<entity.Server>);
   }
 
   @override
-  Future<List<Entity.User>> getAllUsers() async {
+  Future<List<entity.User>> getAllUsers() async {
     var ref = db!.reference().child("Users");
     var users = await ref.get();
     if (users == null) {
@@ -42,19 +41,19 @@ class FirebaseData implements DataProvider {
     } else {
       users as Map;
       users = users.values.toList();
-      users = (users as List).map((e) => Entity.User.fromMap(e)).toList();
+      users = (users as List).map((e) => entity.User.fromMap(e)).toList();
     }
-    return (users as List<Entity.User>);
+    return (users as List<entity.User>);
   }
 
   @override
-  Future<Entity.User?> getUserById(String id) async {
+  Future<entity.User?> getUserById(String id) async {
     var ref = db!.reference().child("Users/$id");
     var users = await ref.get();
     if (users == null) {
       return null;
     } else {
-      return Entity.User.fromMap(users);
+      return entity.User.fromMap(users);
     }
   }
 
@@ -64,7 +63,7 @@ class FirebaseData implements DataProvider {
   }
 
   @override
-  Entity.User updateUser(Entity.User user) {
+  entity.User updateUser(entity.User user) {
     var ref = db!.reference().child("Users");
     ref.update({user.id: user.toMap()});
     return user;
