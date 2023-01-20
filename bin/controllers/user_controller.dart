@@ -86,8 +86,15 @@ class UserController extends IController {
   Future<Response> _postAddUser(Request req) async {
     var body = await req.readAsString();
     var postData = jsonDecode(body);
-    var userId = await AddUserUsecase.addUsers(
-        User(id: postData['telegramId'], username: postData['username']));
+    var userCheck = await GetUserUsecase.getUserById(postData['telegramId']);
+    User newUser;
+    if (userCheck != null) {
+      newUser = userCheck.copyWith(username: postData['username']);
+    } else {
+      newUser =
+          User(id: postData['telegramId'], username: postData['username']);
+    }
+    var userId = await AddUserUsecase.addUsers(newUser);
     return Response.ok(jsonEncode({"userId": userId}));
   }
 
