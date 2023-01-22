@@ -42,18 +42,23 @@ class WireguardServer implements IWireguardServer {
 
   @override
   void deletePeer(String urlSafePublicKey) {
-    // TODO: implement deletePeer
+    http.delete(
+        Uri.http(
+            '${server.ip}:$port', '/v1/devices/wg0/peers/$urlSafePublicKey/'),
+        headers: {"Authorization": "Bearer capybara"});
   }
 
   @override
-  Future<String> getConfig(String urlSafePublicKey) {
-    // TODO: implement getConfig
-    throw UnimplementedError();
+  Future<String> getConfig(String urlSafePublicKey) async {
+    var res = await http.get(
+        Uri.http('${server.ip}:$port',
+            '/v1/devices/wg0/peers/$urlSafePublicKey/quick.conf'),
+        headers: {"Authorization": "Bearer capybara"});
+    return res.body;
   }
 
   @override
   Future<Uint8List> getQRConfig(String urlSafePublicKey) async {
-    // TODO: implement getQRConfig
     var res = await http.get(
         Uri.http('${server.ip}:$port',
             '/v1/devices/wg0/peers/$urlSafePublicKey/quick.conf.png'),

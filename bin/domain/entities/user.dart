@@ -2,8 +2,6 @@
 import 'dart:convert';
 
 import 'package:dart_json_mapper/dart_json_mapper.dart';
-import 'package:uuid/uuid.dart';
-
 import 'sertificate.dart';
 
 @jsonSerializable

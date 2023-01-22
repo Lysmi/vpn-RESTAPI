@@ -3,5 +3,4 @@ services:
   web:
     container_name: vpnrestapi
     build: .
-    ports:
-      - "8080:8080"
+    network_mode: "host"
