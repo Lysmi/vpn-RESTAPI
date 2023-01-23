@@ -78,4 +78,11 @@ class FirebaseDataProvider implements DataProvider {
     ref.update({user.id: user.toMap()});
     return user;
   }
+
+  @override
+  Entity.User removeUser(Entity.User user) {
+    var ref = db!.reference().child("Users");
+    ref.remove();
+    return user;
+  }
 }

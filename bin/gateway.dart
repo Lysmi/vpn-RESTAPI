@@ -19,6 +19,7 @@ import 'domain/repositories/servers_repository_interface.dart';
 import 'domain/repositories/users_repository_interface.dart';
 import 'domain/usecases/add_user_usecase.dart';
 import 'domain/usecases/get_user_usecase.dart';
+import 'domain/usecases/misc_user_usecase.dart';
 import 'domain/usecases/server_usecase.dart';
 import 'gateway.mapper.g.dart' show initializeJsonMapper;
 
@@ -41,6 +42,7 @@ void getItRegister() {
 }
 
 void usecasesRegister() {
+  GetIt.I.registerSingleton<MiscUserUsecase>(MiscUserUsecase());
   GetIt.I.registerSingleton<GetUserUsecase>(GetUserUsecase());
   GetIt.I.registerSingleton<AddUserUsecase>(AddUserUsecase());
   GetIt.I.registerSingleton<ServerUsecase>(ServerUsecase());

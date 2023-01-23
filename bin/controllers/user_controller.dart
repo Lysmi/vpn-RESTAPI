@@ -8,6 +8,7 @@ import '../domain/entities/sertificate.dart';
 import '../domain/entities/user.dart';
 import '../domain/usecases/add_user_usecase.dart';
 import '../domain/usecases/get_user_usecase.dart';
+import '../domain/usecases/misc_user_usecase.dart';
 import '../domain/usecases/user_balance_usecase.dart';
 import 'controller_interface.dart';
 
@@ -17,14 +18,27 @@ class UserController extends IController {
   @override
   UserController addHandlers() {
     router
-      ..get("/users/<userId>", _getUserById)
-      ..get("/users", _getAllUsers)
-      ..get("/users/<userId>/qrCode", _getUserQR)
-      ..patch("/users/<userId>/useFreePeriod", _patchUseFreePeriod)
-      ..post("/users", _postAddUser)
-      ..patch("/users/<userId>/addToBalance/<balance>", _patchAddUserBalance)
-      ..patch("/users", _patchUpdateUser);
+      ..get("/users/<userId>", _getUserById) // get user by id
+      ..get("/users", _getAllUsers) // get user
+      ..get("/users/<userId>/qrCode", _getUserQR) // get qr confg
+      ..patch("/users/<userId>/useFreePeriod",
+          _patchUseFreePeriod) // start free/test period
+      ..post("/users", _postAddUser) // add user
+      ..patch("/users/<userId>/addToBalance/<balance>",
+          _patchAddUserBalance) // increase balance
+      ..patch("/users", _patchUpdateUser) // update user
+      ..delete("/users/<userId>", _deleteUserById);
     return this;
+  }
+
+  Future<Response> _deleteUserById(Request req, String userId) async {
+    final miscUserUsecase = GetIt.I<MiscUserUsecase>();
+    var user = await miscUserUsecase.removeUser(userId);
+    if (user == null) {
+      return Response.badRequest(
+          body: jsonEncode({"error": "User don`t exist"}));
+    }
+    return Response.ok(JsonMapper.serialize(user));
   }
 
   Future<Response> _getUserById(Request req, String userId) async {

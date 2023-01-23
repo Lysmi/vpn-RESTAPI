@@ -5,4 +5,5 @@ abstract class IUsersRepository {
   Future<User?> getUserById(String id);
   Future<User?> updateUser(User user);
   void addUser(User user);
+  Future<User?> removeUser(String id);
 }
