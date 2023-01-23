@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_late
+
 import 'dart:typed_data';
 
 import 'package:get_it/get_it.dart';
@@ -7,21 +9,31 @@ import '../entities/user.dart';
 import '../repositories/users_repository_interface.dart';
 
 class GetUserUsecase {
-  IUsersRepository userRep = GetIt.I<IUsersRepository>();
-  Future<List<User>> getAllUsers() {
+  static late IUsersRepository userRep = GetIt.I<IUsersRepository>();
+
+  static Future<List<User>> getAllUsers() {
     return userRep.getAllUsers();
   }
 
-  Future<User?> getUserById(String id) {
+  static Future<User?> getUserById(String id) {
     return userRep.getUserById(id);
   }
 
-  Future<Uint8List?> getUserQR(String id) async {
+  static Future<Uint8List?> getUserQR(String id) async {
     var userSertificate = (await userRep.getUserById(id))?.currentCertificate;
     if (userSertificate == null) {
       return null;
     }
     return WireguardServer(userSertificate.server)
         .getQRConfig(userSertificate.publicKey);
+  }
+
+  static Future<String?> getUserConfig(String id) async {
+    var userSertificate = (await userRep.getUserById(id))?.currentCertificate;
+    if (userSertificate == null) {
+      return null;
+    }
+    return WireguardServer(userSertificate.server)
+        .getConfig(userSertificate.publicKey);
   }
 }

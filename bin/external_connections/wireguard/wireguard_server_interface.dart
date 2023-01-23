@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import '../../domain/entities/sertificate.dart';
-import 'peer_dto.dart';
 
 abstract class IWireguardServer {
   Future<Sertificate> addNewPeer();

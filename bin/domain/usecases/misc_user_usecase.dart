@@ -9,9 +9,9 @@ import '../repositories/servers_repository_interface.dart';
 import '../repositories/users_repository_interface.dart';
 
 class MiscUserUsecase {
-  IUsersRepository users = GetIt.I<IUsersRepository>();
+  static IUsersRepository users = GetIt.I<IUsersRepository>();
 
-  Future<User?> removeUser(String id) async {
+  static Future<User?> removeUser(String id) async {
     return users.removeUser(id);
   }
 }

@@ -135,7 +135,7 @@ packages:
     source: hosted
     version: "4.3.0"
   collection:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: collection
       url: "https://pub.dartlang.org"
@@ -275,7 +275,7 @@ packages:
     source: hosted
     version: "2.2.3"
   http:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: http
       url: "https://pub.dartlang.org"
@@ -296,7 +296,7 @@ packages:
     source: hosted
     version: "3.2.1"
   http_parser:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http_parser
       url: "https://pub.dartlang.org"
@@ -338,7 +338,7 @@ packages:
     source: hosted
     version: "4.7.0"
   lints:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: lints
       url: "https://pub.dartlang.org"
@@ -372,6 +372,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
+  neat_periodic_task:
+    dependency: "direct main"
+    description:
+      name: neat_periodic_task
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   node_preamble:
     dependency: transitive
     description:
@@ -463,6 +470,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.10"
+  retry:
+    dependency: transitive
+    description:
+      name: retry
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
   rxdart:
     dependency: transitive
     description:
@@ -526,6 +540,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
+  slugid:
+    dependency: transitive
+    description:
+      name: slugid
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.1"
   sortedmap:
     dependency: transitive
     description:
