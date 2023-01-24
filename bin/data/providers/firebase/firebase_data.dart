@@ -22,7 +22,7 @@ class FirebaseData implements DataProvider {
   Future<List<entity.Server>> getAllServers() async {
     var ref = db!.reference().child("Servers");
     var servers = await ref.get();
-    if (servers == null) {
+    if (servers == null || servers == "") {
       return [];
     } else {
       servers as Map;
@@ -36,7 +36,7 @@ class FirebaseData implements DataProvider {
   Future<List<entity.User>> getAllUsers() async {
     var ref = db!.reference().child("Users");
     var users = await ref.get();
-    if (users == null) {
+    if (users == null || users == "") {
       return [];
     } else {
       users as Map;
