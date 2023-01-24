@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:shelf/shelf.dart';
 
+import '../domain/entities/region.dart';
 import '../domain/entities/user.dart';
 import '../domain/usecases/add_user_usecase.dart';
 import '../domain/usecases/get_user_usecase.dart';
 import '../domain/usecases/misc_user_usecase.dart';
 import '../domain/usecases/server_usecase.dart';
+import '../domain/usecases/update_user_usecase.dart';
 import '../domain/usecases/user_balance_usecase.dart';
 import 'controller_interface.dart';
 
@@ -26,7 +28,8 @@ class UserController extends IController {
       ..patch("/users/<userId>/addToBalance/<balance>",
           _patchAddUserBalance) // increase balance
       ..patch("/users", _patchUpdateUser) // update user
-      ..delete("/users/<userId>", _deleteUserById);
+      ..delete("/users/<userId>", _deleteUserById)
+      ..patch("/users/<userId>/changeRegion", _changeUserRegion);
     return this;
   }
 
@@ -101,10 +104,10 @@ class UserController extends IController {
     var body = await req.readAsString();
     var postData = jsonDecode(body);
     var userCheck = await GetUserUsecase.getUserById(postData['telegramId']);
-    var region = await ServerUsecase.getRegionById(postData['regionId']);
-    if (region == null) {
-      return Response.badRequest(
-          body: jsonEncode({"error": "region doesnt exist"}));
+    String? regionId = postData['regionId'];
+    Region? region;
+    if (regionId != null) {
+      region = await ServerUsecase.getRegionById(regionId);
     }
     User newUser;
     if (userCheck != null) {
@@ -138,8 +141,24 @@ class UserController extends IController {
     return Response.ok(JsonMapper.serialize(users));
   }
 
-  Response _patchUpdateUser(Request req, int id) {
-    //TODO implement
+  /*
+  postData = {
+    "regionId": "id"
+  }
+  */
+  Future<Response> _changeUserRegion(Request req, String id) async {
+    var body = await req.readAsString();
+    var postData = jsonDecode(body);
+    var user =
+        await UpdateUserUsecase.changeUserRegion(postData["regionId"], id);
+    if (user != null) {
+      return Response.ok(JsonMapper.serialize(user));
+    } else {
+      return Response.badRequest(body: "User didn`t found");
+    }
+  }
+
+  Future<Response> _patchUpdateUser(Request req, String id) async {
     return Response.ok('Unimplement\n');
   }
 }
