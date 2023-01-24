@@ -20,13 +20,14 @@ class UserController extends IController {
       ..get("/users/<userId>", _getUserById) // get user by id
       ..get("/users", _getAllUsers) // get user
       ..get("/users/<userId>/qrCode", _getUserQR) // get qr confg
+      ..get("/users/<userId>/config", _getUserConfig) // get config
       ..patch("/users/<userId>/useFreePeriod",
           _patchUseFreePeriod) // start free/test period
       ..post("/users", _postAddUser) // add user
       ..patch("/users/<userId>/addToBalance/<balance>",
           _patchAddUserBalance) // increase balance
       ..patch("/users", _patchUpdateUser) // update user
-      ..delete("/users/<userId>", _deleteUserById);
+      ..delete("/users/<userId>", _deleteUserById); // user userId
     return this;
   }
 
