@@ -1,5 +1,6 @@
 import 'package:firebase_dart/firebase_dart.dart';
 import 'package:get_it/get_it.dart';
+import '../../../domain/entities/region.dart' as entity;
 import '../../../domain/entities/user.dart' as entity;
 import '../../../domain/entities/server.dart' as entity;
 import '../data_provider.dart';
@@ -73,5 +74,36 @@ class FirebaseData implements DataProvider {
   void removeUser(String id) {
     var ref = db!.reference().child("Users/$id");
     ref.remove();
+  }
+
+  @override
+  void addRegion(entity.Region region) {
+    var ref = db!.reference().child("Regions");
+    ref.update({region.id: region.toMap()});
+  }
+
+  @override
+  Future<List<entity.Region>> getAllRegions() async {
+    var ref = db!.reference().child("Regions");
+    var regions = await ref.get();
+    if (regions == null || regions == "") {
+      return [];
+    } else {
+      regions as Map;
+      regions = regions.values.toList();
+      regions = (regions as List).map((e) => entity.Region.fromMap(e)).toList();
+    }
+    return (regions as List<entity.Region>);
+  }
+
+  @override
+  Future<entity.Region?> getRegionById(String id) async {
+    var ref = db!.reference().child("Regions/$id");
+    var users = await ref.get();
+    if (users == null) {
+      return null;
+    } else {
+      return entity.Region.fromMap(users);
+    }
   }
 }

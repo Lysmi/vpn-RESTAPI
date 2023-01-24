@@ -13,6 +13,7 @@ import 'package:stormberry/stormberry.dart';
 import 'package:vpn_rest_server/environment_config.dart';
 import 'controllers/config_controller.dart';
 import 'controllers/event_contoller.dart';
+import 'controllers/region_controller.dart';
 import 'controllers/server_controller.dart';
 import 'controllers/user_controller.dart';
 import 'data/providers/data_provider.dart';
@@ -20,9 +21,11 @@ import 'data/providers/events_provider.dart';
 import 'data/providers/firebase/firebase_data.dart';
 import 'data/providers/firebase/firebase_events.dart';
 import 'data/repositories/events_repository.dart';
+import 'data/repositories/regions_repository.dart';
 import 'data/repositories/servers_repository.dart';
 import 'data/repositories/users_repository.dart';
 import 'domain/repositories/events_repository_interface.dart';
+import 'domain/repositories/regions_repository_interface.dart';
 import 'domain/repositories/servers_repository_interface.dart';
 import 'domain/repositories/users_repository_interface.dart';
 import 'domain/usecases/user_balance_usecase.dart';
@@ -67,6 +70,7 @@ void repositoryRegister() {
   GetIt.I.registerSingleton<IUsersRepository>(UserRepository());
   GetIt.I.registerSingleton<IServerRepository>(ServerRepository());
   GetIt.I.registerSingleton<IEventsRepository>(EventsRepository());
+  GetIt.I.registerSingleton<IRegionsRepository>(RegionsRepository());
 }
 
 //TODO put in a separate file
@@ -95,6 +99,7 @@ void main(List<String> args) async {
   UserController(router: router).addHandlers();
   ServerController(router: router).addHandlers();
   EventController(router: router).addHandlers();
+  RegionController(router: router).addHandlers();
 
   final swaggerHandler = SwaggerUI(swaggerPath, title: 'Swagger Test');
   router.get("/swagger", swaggerHandler.call);

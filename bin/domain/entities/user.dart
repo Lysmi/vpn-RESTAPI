@@ -2,6 +2,8 @@
 import 'dart:convert';
 
 import 'package:dart_json_mapper/dart_json_mapper.dart';
+
+import 'region.dart';
 import 'sertificate.dart';
 
 @jsonSerializable
@@ -10,6 +12,7 @@ class User {
   String username;
   int balance;
   bool freePeriodUsed;
+  Region region;
   Sertificate? currentCertificate;
 
   User({
@@ -17,6 +20,7 @@ class User {
     this.username = '',
     this.balance = 0,
     this.freePeriodUsed = false,
+    required this.region,
     this.currentCertificate,
   });
 
@@ -25,6 +29,7 @@ class User {
     String? username,
     int? balance,
     bool? freePeriodUsed,
+    Region? region,
     Sertificate? currentCertificate,
   }) {
     return User(
@@ -32,6 +37,7 @@ class User {
       username: username ?? this.username,
       balance: balance ?? this.balance,
       freePeriodUsed: freePeriodUsed ?? this.freePeriodUsed,
+      region: region ?? this.region,
       currentCertificate: currentCertificate ?? this.currentCertificate,
     );
   }
@@ -42,6 +48,7 @@ class User {
       'username': username,
       'balance': balance,
       'freePeriodUsed': freePeriodUsed,
+      'region': region.toMap(),
       'currentCertificate': currentCertificate?.toMap(),
     };
   }
@@ -52,6 +59,7 @@ class User {
       username: map['username'] as String,
       balance: map['balance'] as int,
       freePeriodUsed: map['freePeriodUsed'] as bool,
+      region: Region.fromMap(map['region'] as Map<String, dynamic>),
       currentCertificate: map['currentCertificate'] != null
           ? Sertificate.fromMap(
               map['currentCertificate'] as Map<String, dynamic>)
@@ -66,7 +74,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(id: $id, username: $username, balance: $balance, freePeriodUsed: $freePeriodUsed, currentCertificate: $currentCertificate)';
+    return 'User(id: $id, username: $username, balance: $balance, freePeriodUsed: $freePeriodUsed, region: $region, currentCertificate: $currentCertificate)';
   }
 
   @override
@@ -77,6 +85,7 @@ class User {
         other.username == username &&
         other.balance == balance &&
         other.freePeriodUsed == freePeriodUsed &&
+        other.region == region &&
         other.currentCertificate == currentCertificate;
   }
 
@@ -86,6 +95,7 @@ class User {
         username.hashCode ^
         balance.hashCode ^
         freePeriodUsed.hashCode ^
+        region.hashCode ^
         currentCertificate.hashCode;
   }
 }

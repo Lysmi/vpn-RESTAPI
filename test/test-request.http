@@ -15,12 +15,13 @@ content-type: application/json
 }
 
 ###
-POST http://localhost:8080/users
+POST http://localhost:8083/users
 content-type: application/json
 
 {
     "telegramId": "212",
-    "username": "lysmi"
+    "username": "lysmi",
+    "regionId": "4f4abb0b-063b-4a91-b944-acfbf68c3a1b"
 }
 ###
 GET  http://192.168.255.13:8080/users
@@ -46,13 +47,24 @@ PATCH  http://localhost:8080/users/9945f805-b8aa-4d1d-a6d6-6fc2e68058d3/useFreeP
 ###
 GET http://192.168.255.13:8080/servers
 ###
-POST http://192.168.255.13:8080/servers
+POST http://0.0.0.0:8083/servers
 content-type: application/json
 
 {
-    "ip": "139.59.130.218",
-    "serverName": "lysmiServer"
+    "ip": "23.111.122.101",
+    "serverName": "feezServer",
+    "regionId": "085aba9e-965b-4419-a867-395b163c6379"
 }
+
+###
+POST http://0.0.0.0:8083/regions
+content-type: application/json
+
+{
+    "name": "russia"
+}
+###
+GET http://0.0.0.0:8083/regions
   //   "serverName": "lysmiServer",
 ###
 POST http://localhost:8080/servers

@@ -7,6 +7,7 @@ import '../domain/entities/user.dart';
 import '../domain/usecases/add_user_usecase.dart';
 import '../domain/usecases/get_user_usecase.dart';
 import '../domain/usecases/misc_user_usecase.dart';
+import '../domain/usecases/server_usecase.dart';
 import '../domain/usecases/user_balance_usecase.dart';
 import 'controller_interface.dart';
 
@@ -94,19 +95,27 @@ class UserController extends IController {
   // postData = {
   //   'telegramId': 212,
   //   'username': 'lysmi',
+  //   'regionId': 'awdawdfdg'
   // }
   Future<Response> _postAddUser(Request req) async {
     var body = await req.readAsString();
     var postData = jsonDecode(body);
     var userCheck = await GetUserUsecase.getUserById(postData['telegramId']);
+    var region = await ServerUsecase.getRegionById(postData['regionId']);
+    if (region == null) {
+      return Response.badRequest(
+          body: jsonEncode({"error": "region doesnt exist"}));
+    }
     User newUser;
     if (userCheck != null) {
       newUser = userCheck.copyWith(username: postData['username']);
     } else {
-      newUser =
-          User(id: postData['telegramId'], username: postData['username']);
+      newUser = User(
+          id: postData['telegramId'],
+          username: postData['username'],
+          region: region);
     }
-    var userId = await AddUserUsecase.addUsers(newUser);
+    var userId = await AddUserUsecase.addUser(newUser);
     return Response.ok(jsonEncode({"userId": userId}));
   }
 

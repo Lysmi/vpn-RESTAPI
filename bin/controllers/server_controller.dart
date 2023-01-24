@@ -29,16 +29,20 @@ class ServerController extends IController {
   // postData = {
   //   "ip": "0.0.0.0",
   //   "serverName": "lysmiServer",
+  //   "regionId": 'id'
   // }
   Future<Response> _postAddServer(Request req) async {
     var body = await req.readAsString();
     var postData = jsonDecode(body);
-
+    var region = await ServerUsecase.getRegionById(postData['regionId']);
+    if (region == null) {
+      return Response.badRequest(body: 'Region doesnt exist');
+    }
     ServerUsecase.addServer(entity.Server(
         ip: postData["ip"],
         serverName: postData["serverName"],
         countUsers: 0,
-        region: Region(regionName: 'ru')));
+        region: region));
 
     return Response.ok('Created');
   }
