@@ -11,7 +11,7 @@ import '../repositories/users_repository_interface.dart';
 class MiscUserUsecase {
   static IUsersRepository users = GetIt.I<IUsersRepository>();
 
-  static Future<User?> removeUser(String id) async {
+  static Future<bool> removeUser(String id) async {
     return users.removeUser(id);
   }
 }

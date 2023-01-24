@@ -70,9 +70,8 @@ class FirebaseData implements DataProvider {
   }
 
   @override
-  entity.User removeUser(entity.User user) {
-    var ref = db!.reference().child("Users");
+  void removeUser(String id) {
+    var ref = db!.reference().child("Users/$id");
     ref.remove();
-    return user;
   }
 }

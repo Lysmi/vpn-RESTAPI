@@ -9,5 +9,5 @@ abstract class DataProvider {
   void addServer(Server server);
   User updateUser(User user);
   void registration();
-  User removeUser(User user);
+  void removeUser(String id);
 }

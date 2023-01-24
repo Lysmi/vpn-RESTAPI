@@ -31,12 +31,12 @@ class UserRepository extends IUsersRepository {
   }
 
   @override
-  Future<User?> removeUser(String id) async {
-    final User? user = await _dataProvider.getUserById(id);
-    if (user != null) {
-      return _dataProvider.removeUser(user);
+  Future<bool> removeUser(String id) async {
+    if ((await _dataProvider.getUserById(id)) != null) {
+      _dataProvider.removeUser(id);
+      return true;
     } else {
-      return null;
+      return false;
     }
   }
 }

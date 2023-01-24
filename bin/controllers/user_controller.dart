@@ -30,12 +30,12 @@ class UserController extends IController {
   }
 
   Future<Response> _deleteUserById(Request req, String userId) async {
-    var user = await MiscUserUsecase.removeUser(userId);
-    if (user == null) {
+    var isDeleted = await MiscUserUsecase.removeUser(userId);
+    if (isDeleted) {
       return Response.badRequest(
           body: jsonEncode({"error": "User don`t exist"}));
     }
-    return Response.ok(JsonMapper.serialize(user));
+    return Response.ok(JsonMapper.serialize(isDeleted));
   }
 
   Future<Response> _getUserById(Request req, String userId) async {
