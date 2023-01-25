@@ -23,8 +23,12 @@ class AddUserUsecase {
   }
 
   static Future<User> generateNewSertificate(User user) async {
+    final region = user.region;
+    if (region == null) {
+      return user;
+    }
     var wireguardServer =
-        WireguardServer(await ServerUsecase.chooseServer(user.region));
+        WireguardServer(await ServerUsecase.chooseServer(region));
     user.currentCertificate = await wireguardServer.addNewPeer();
     return user;
   }

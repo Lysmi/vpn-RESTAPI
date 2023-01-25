@@ -12,7 +12,7 @@ class User {
   String username;
   int balance;
   bool freePeriodUsed;
-  Region region;
+  Region? region;
   Sertificate? currentCertificate;
 
   User({
@@ -48,7 +48,7 @@ class User {
       'username': username,
       'balance': balance,
       'freePeriodUsed': freePeriodUsed,
-      'region': region.toMap(),
+      'region': region?.toMap(),
       'currentCertificate': currentCertificate?.toMap(),
     };
   }
@@ -59,7 +59,9 @@ class User {
       username: map['username'] as String,
       balance: map['balance'] as int,
       freePeriodUsed: map['freePeriodUsed'] as bool,
-      region: Region.fromMap(map['region'] as Map<String, dynamic>),
+      region: map['region'] != null
+          ? Region.fromMap(map['region'] as Map<String, dynamic>)
+          : null,
       currentCertificate: map['currentCertificate'] != null
           ? Sertificate.fromMap(
               map['currentCertificate'] as Map<String, dynamic>)
