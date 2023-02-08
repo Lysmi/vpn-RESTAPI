@@ -150,8 +150,12 @@ class UserController extends IController {
   Future<Response> _changeUserRegion(Request req, String id) async {
     var body = await req.readAsString();
     var postData = jsonDecode(body);
-    var user =
-        await UpdateUserUsecase.changeUserRegion(postData["regionId"], id);
+
+    var region = await ServerUsecase.getRegionById(postData["regionId"]);
+
+    if (region == null) return Response.badRequest(body: 'region not exist');
+
+    var user = await UpdateUserUsecase.changeUserRegion(region, id);
     if (user != null) {
       return Response.ok(JsonMapper.serialize(user));
     } else {
