@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:neat_periodic_task/neat_periodic_task.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
+import 'package:shelf_cors_headers/shelf_cors_headers.dart';
 import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf_swagger_ui/shelf_swagger_ui.dart';
 import 'package:stormberry/stormberry.dart';
@@ -86,6 +87,11 @@ void dailyDecreaseBalanceRun() {
   scheduler.start();
 }
 
+final overrideHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE',
+  "Access-Control-Allow-Headers": "X-Requested-With",
+};
 void main(List<String> args) async {
   initializeJsonMapper();
 
@@ -107,7 +113,10 @@ void main(List<String> args) async {
   router.get("/swagger", swaggerHandler.call);
 
   // Configure a pipeline that logs requests.
-  final handler = Pipeline().addMiddleware(logRequests()).addHandler(router);
+  final handler = Pipeline()
+      .addMiddleware(logRequests())
+      .addMiddleware(corsHeaders(headers: overrideHeaders))
+      .addHandler(router);
 
   // For running in containers, we respect the PORT environment variable.
   final port = int.parse(Platform.environment['PORT'] ?? '8083');
