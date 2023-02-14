@@ -41,11 +41,14 @@ class WireguardServer implements IWireguardServer {
   }
 
   @override
-  void deletePeer(String urlSafePublicKey) {
-    http.delete(
-        Uri.http(
-            '${server.ip}:$port', '/v1/devices/wg0/peers/$urlSafePublicKey/'),
-        headers: {"Authorization": "Bearer capybara"});
+  Future deletePeer(String urlSafePublicKey) async {
+    try {
+      await http.delete(
+          // TODO если айпи недоступен сделай с этим что то удали запись, я хуй его знаю, код ломаться заебал
+          Uri.http(
+              '${server.ip}:$port', '/v1/devices/wg0/peers/$urlSafePublicKey/'),
+          headers: {"Authorization": "Bearer capybara"});
+    } catch (e) {}
   }
 
   @override

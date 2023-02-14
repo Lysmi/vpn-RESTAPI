@@ -62,7 +62,8 @@ class UserBalanceUsecase {
       if (user.balance <= 0) {
         var sertificate = user.currentCertificate;
         if (sertificate != null) {
-          WireguardServer(sertificate.server).deletePeer(sertificate.publicKey);
+          await WireguardServer(sertificate.server)
+              .deletePeer(sertificate.publicKey);
           user.currentCertificate = null;
         }
       }
