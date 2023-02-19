@@ -114,6 +114,6 @@ void main(List<String> args) async {
   // For running in containers, we respect the PORT environment variable.
   final port = int.parse(Platform.environment['PORT'] ?? '8083');
   final server = await serve(handler, ip, port);
-  dailyDecreaseBalanceRun();
+  //dailyDecreaseBalanceRun();
   print('Server listening on port ${server.port}');
 }
