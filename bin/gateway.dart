@@ -11,6 +11,7 @@ import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf_swagger_ui/shelf_swagger_ui.dart';
 import 'package:stormberry/stormberry.dart';
 import 'package:vpn_rest_server/environment_config.dart';
+import '../configurations.dart';
 import 'controllers/config_controller.dart';
 import 'controllers/event_contoller.dart';
 import 'controllers/region_controller.dart';
@@ -51,12 +52,15 @@ Future<void> getItRegister() async {
 
 Future<void> registrationFirebase() async {
   await FirebaseTesting.setup();
+  var firebase = Configurations.config['firebase'];
   var options = FirebaseOptions(
-      appId: '1:567779820391:web:2471a31bdfa94ecfdd65c2',
-      apiKey: 'AIzaSyBGyJHCcS-OyhdlgldtH0evXey321WJlN8',
-      projectId: 'vpnrest-cbdd5',
-      messagingSenderId: 'ignore',
-      authDomain: 'vpnrest-cbdd5.firebaseapp.com');
+      apiKey: firebase['apiKey'],
+      authDomain: firebase['authDomain'],
+      databaseURL: firebase['databaseURL'],
+      projectId: firebase['projectId'],
+      storageBucket: firebase['storageBucket'],
+      messagingSenderId: firebase['messagingSenderId'],
+      appId: firebase['appId']);
 
   var app = await Firebase.initializeApp(options: options);
   var db = FirebaseDatabase(
