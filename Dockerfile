@@ -16,7 +16,7 @@ RUN dart compile exe bin/gateway.dart -o bin/server
 # and the pre-built AOT-runtime in the `/runtime/` directory of the base image.
 FROM scratch
 COPY --from=build /runtime/ /
-COPY --from=build /app/bin/server /app/bin
+COPY --from=build /app/bin/server /app/bin/
 COPY /config.yaml ./
 
 # Start server.
