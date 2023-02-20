@@ -17,7 +17,7 @@ RUN dart compile exe bin/gateway.dart -o bin/server
 FROM scratch
 COPY --from=build /runtime/ /
 COPY --from=build /app/bin/server /app/bin
-COPY /config.yaml .//
+COPY /config.yaml ./
 
 # Start server.
 EXPOSE 8080
