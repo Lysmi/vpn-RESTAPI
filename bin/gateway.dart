@@ -31,6 +31,13 @@ import 'domain/repositories/servers_repository_interface.dart';
 import 'domain/repositories/users_repository_interface.dart';
 import 'domain/usecases/user_balance_usecase.dart';
 import 'gateway.mapper.g.dart' show initializeJsonMapper;
+import 'package:shelf_cors_headers/shelf_cors_headers.dart';
+
+final overrideHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE',
+  "Access-Control-Allow-Headers": "X-Requested-With",
+};
 
 //register all get_it models
 Future<void> getItRegister() async {
@@ -109,7 +116,10 @@ void main(List<String> args) async {
   router.get("/swagger", swaggerHandler.call);
 
   // Configure a pipeline that logs requests.
-  final handler = Pipeline().addMiddleware(logRequests()).addHandler(router);
+  final handler = Pipeline()
+  .addMiddleware(logRequests())
+  .addMiddleware(corsHeaders(headers: overrideHeaders))
+  .addHandler(router);
 
   // For running in containers, we respect the PORT environment variable.
   final port = int.parse(Platform.environment['PORT'] ?? '8083');
