@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:shelf/shelf.dart';
 
 import '../domain/usecases/events_usecases.dart';
+import '../domain/usecases/get_user_usecase.dart';
 import 'controller_interface.dart';
+import 'package:http/http.dart' as http;
 
 class EventController extends IController {
   EventController({required super.router});
@@ -44,4 +46,28 @@ class EventController extends IController {
     print(postData);
     return Response.ok('Notified');
   }
+
+  // rassilki
+  var host = ""; 
+
+  // postData = {
+  //    "users": [<ids>]
+  //    "message": "message"
+  // }
+  Future<Response> _notify(Request req) async {
+    var body = await req.readAsString();
+    var postData = jsonDecode(body);
+
+    var users = [];
+    for (var userId in postData["usersIds"]) {
+      users.add(GetUserUsecase.getUserById(userId));
+    }
+
+    for (var user in users) {
+      http.post(Uri.parse(host), body: jsonEncode({"Event": "notify", "User": user.toMap()}));
+    }
+
+    return Response.ok('Notified');
+  }
+
 }
