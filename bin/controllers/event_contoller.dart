@@ -15,7 +15,8 @@ class EventController extends IController {
     router
       ..post('/subscribeOn', _subscribeOn)
       ..get('/notifySubscribers/<userId>', _notifySubscribers)
-      ..post('/testSubscribe', _testSubscribe);
+      ..post('/testSubscribe', _testSubscribe)
+      ..post('/sendMessages', _notify);
     return this;
   }
 
@@ -48,7 +49,7 @@ class EventController extends IController {
   }
 
   // rassilki
-  var host = ""; 
+  var host = "https://yukkop.dev/sendMessages"; 
 
   // postData = {
   //    "users": [<ids>]
