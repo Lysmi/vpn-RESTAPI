@@ -30,8 +30,29 @@ class UserController extends IController {
           _patchAddUserBalance) // increase balance
       ..patch("/users", _patchUpdateUser) // update user
       ..delete("/users/<userId>", _deleteUserById)
-      ..patch("/users/<userId>/changeRegion", _changeUserRegion);
+      ..patch("/users/<userId>/changeRegion", _changeUserRegion)
+      ..patch("/users/<id>/balance/<balance>", _patchChangeUserBalance);
     return this;
+  }
+
+  Future<Response> _patchChangeUserBalance(
+      Request req, String userId, String balanceString) async {
+
+    var user = await GetUserUsecase.getUserById(userId);
+    if (user == null) {
+      return Response.badRequest(
+          body: jsonEncode({"error": "user does not exist"}));
+    }
+    var balance = int.tryParse(balanceString);
+    if (balance == null) {
+      return Response.badRequest(
+          body: jsonEncode({"error": "Balance must be integer"}));
+    }
+    var res = await UserBalanceUsecase.addBalanceToUser((- user.balance + balance), userId);
+    if (res == null) {
+      return Response.badRequest(body: "User didn`t found");
+    }
+    return Response.ok(jsonEncode({"newBalance": res}));
   }
 
   Future<Response> _deleteUserById(Request req, String userId) async {
