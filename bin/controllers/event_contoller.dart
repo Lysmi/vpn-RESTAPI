@@ -49,7 +49,7 @@ class EventController extends IController {
   }
 
   // rassilki
-  var host = "https://yukkop.dev/sendMessages"; 
+  var host = "http://localhost:8085/send-message"; 
 
   // postData = {
   //    "users": [<ids>]
@@ -60,13 +60,12 @@ class EventController extends IController {
     var postData = jsonDecode(body);
 
     var users = [];
+    // check users on exist
     for (var userId in postData["usersIds"]) {
-      users.add(GetUserUsecase.getUserById(userId));
+      users.add(await GetUserUsecase.getUserById(userId));
     }
 
-    for (var user in users) {
-      http.post(Uri.parse(host), body: jsonEncode({"Event": "notify", "User": user.toMap()}));
-    }
+    var responce = await http.post(Uri.parse(host), body: body);
 
     return Response.ok('Notified');
   }
